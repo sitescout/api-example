@@ -1,0 +1,203 @@
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'sonar-runner'
+apply plugin: 'jacoco'
+
+version = new Version(version: 2, major: 0, minor: 0, branch: 'master')
+
+war.archiveName 'api-example.war'
+
+def tokens = [version: version.fullVersion(), branch: version.branch]
+war {
+	from ("src/main/webapp/**/*.xhtml") {
+		expand(tokens)
+	}
+}
+
+war << { println("Built version ${version}") }
+
+test {
+	useTestNG() {
+		useDefaultListeners = true
+		//includeGroups 'unit'
+	}
+}
+
+task integrationTest(type: Test, dependsOn: 'test') {
+	useTestNG() {
+		useDefaultListeners = true
+		//includeGroups 'integration'
+	}
+}
+
+repositories {
+    maven { url 'https://repository.jboss.org/nexus/content/groups/public-jboss/' }
+    mavenCentral()
+    mavenLocal()
+}
+dependencies {
+
+    String jacksonVersion = '+'
+
+	compile 'com.fasterxml.jackson.core:jackson-core:' + jacksonVersion
+	compile 'com.fasterxml.jackson.core:jackson-databind:' + jacksonVersion
+	compile 'com.fasterxml.jackson.core:jackson-annotations:' + jacksonVersion
+	compile 'com.fasterxml.jackson.datatype:jackson-datatype-json-org:' + jacksonVersion
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:' + jacksonVersion
+
+    compile 'org.richfaces.ui:richfaces-components-ui:+'
+	compile 'org.richfaces.core:richfaces-core-impl:+'
+
+	compile 'ch.qos.logback:logback-classic:+'
+    compile 'org.apache.httpcomponents:httpclient:4.2.5'
+    compile 'commons-lang:commons-lang:2.6'
+
+    compile 'jfree:jfreechart:1.0.13'
+
+    String deltaspikeVersion = '+'
+	compile 'org.apache.deltaspike.modules:deltaspike-jsf-module-api:' + deltaspikeVersion
+	runtime 'org.apache.deltaspike.modules:deltaspike-jsf-module-impl:' + deltaspikeVersion
+	compile 'org.apache.deltaspike.modules:deltaspike-jpa-module-api:' + deltaspikeVersion
+	runtime 'org.apache.deltaspike.modules:deltaspike-jpa-module-impl:' + deltaspikeVersion
+	compile 'org.apache.deltaspike.core:deltaspike-core-api:' + deltaspikeVersion
+	runtime 'org.apache.deltaspike.core:deltaspike-core-impl:' + deltaspikeVersion
+
+
+	//Arquillian
+	testCompile 'org.jboss.arquillian.testng:arquillian-testng-container:+'
+	testCompile 'org.testng:testng:+'
+	testCompile 'org.easytesting:fest-assert-core:+'
+	testCompile 'org.jboss.arquillian.extension:arquillian-persistence-impl:+'
+
+	testRuntime 'org.jboss.as:jboss-as-arquillian-container-remote:7.2.0.Final'
+	testRuntime 'org.jboss.arquillian.protocol:arquillian-protocol-servlet:+'
+
+	testCompile 'org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:+'
+
+	//code coverage
+	testRuntime 'org.jboss.arquillian.extension:arquillian-jacoco:+'
+	testRuntime 'org.jacoco:org.jacoco.core:0.6.1.201212231917'
+
+	//warp
+	testCompile 'org.jboss.arquillian.graphene:graphene-webdriver:+'
+	testCompile ('org.jboss.arquillian.extension:arquillian-warp-jsf:1.0.0.Beta1-SNAPSHOT') {
+		exclude module: 'slf4j-log4j12' //bad warp! don't include logger implementations!
+	}
+
+	providedCompile 'org.jboss.spec:jboss-javaee-6.0:3.0.2.Final'
+
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '1.6' }
+
+String jacocoExecPath = "${buildDir}/coverage-results/jacoco.exec"
+sonarRunner {
+	sonarProperties {
+		property "sonar.host.url", "http://dev.sitescout.ad:9000/"
+		property "sonar.jdbc.url", "jdbc:postgresql://dev.sitescout.ad:5432/sonar"
+		property "sonar.jdbc.driverClassName", "org.postgresql.Driver"
+		property "sonar.username", "sonar"
+		property "sonar.password", "sonar"
+		property "sonar.jacoco.reportPath", "${jacocoExecPath}"
+	}
+}
+
+class Version {
+	int version
+	int major
+	int minor
+	String branch
+
+	String toString() {
+		String res = fullVersion()
+		if (!branch.equals('master')) {
+			res += ".$branch-SNAPSHOT"
+		}
+		return res
+	}
+
+	String fullVersion() {
+		return "$version.$minor.$minor"
+	}
+}
+
+/**
+ * Local Deployment
+ */
+
+String deployLocation = '/opt/wildfly8/standalone/deployments'
+String deployFileLocation = deployLocation + '/' + war.archiveName
+
+task deploy(type: Copy) {
+	from war
+	into file(deployLocation)
+}
+
+task explodedWar(type: Sync) {
+	into "$buildDir/exploded"
+	with war
+}
+
+task deployExplodedClasses(type: Copy) {
+	from ("$buildDir/exploded") {
+		include '**/*.class'
+	}
+	into file(deployFileLocation)
+	dependsOn explodedWar
+}
+
+task deployExplodedOther(type: Copy) {
+	from explodedWar {
+		exclude '**/*.class'
+	}
+	into file(deployFileLocation)
+}
+
+task deployExploded {
+	dependsOn deployExplodedClasses
+	dependsOn deployExplodedOther
+
+	inputs.dir '$buildDir/exploded'
+	outputs.dir deployFileLocation
+}
+deployExploded << {
+	if (deployExplodedClasses.didWork) {
+		File deploymentFile = file(deployFileLocation + '.dodeploy')
+		deploymentFile.createNewFile()
+	}
+}
+
+task undeploy(type: Delete) {
+	delete deployFileLocation + '.deployed'
+}
+
+clean {
+	delete file(deployFileLocation)
+}
+clean.dependsOn undeploy
+
+
+
+/**
+ * Code Coverage
+ */
+
+/*configurations {
+	codeCoverage
+}
+
+dependencies {
+	codeCoverage 'org.jacoco:org.jacoco.agent:0.6.1.201212231917:runtime'
+}
+
+test {
+	jvmArgs "-javaagent:${configurations.codeCoverage.singleFile}=destfile=${jacocoExecPath},sessionid=HSServ,append=false"
+}*/
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        csv.enabled = false
+        xml.enabled = true
+    }
+}

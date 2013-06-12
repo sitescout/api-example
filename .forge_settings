@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+<forge>
+<analytics>
+<enabled>true</enabled>
+</analytics>
+</forge>
+<jboss-as>
+<as7>
+<configured>PROJECT</configured>
+<jboss-home>/usr/local/jboss7</jboss-home>
+</as7>
+</jboss-as>
+</configuration>

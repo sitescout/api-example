@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+    <rich:dataTable value="#{campaignDetailsSiteStats.getDetails(advertiserKey, campaignKey).results}" var="sites">
+
+        <rich:column>
+            <f:facet name="header">Site Rule ID</f:facet>
+            <h:outputText value="#{sites.entity.ruleId}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Site Reference</f:facet>
+            <h:outputText value="#{sites.entity.siteRef}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Review Status</f:facet>
+            <h:outputText value="#{sites.entity.reviewStatus}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Domain</f:facet>
+            <h:outputText value="#{sites.entity.domain}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Bid</f:facet>
+            <h:outputText value="#{sites.entity.bid}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Impresisons Bid</f:facet>
+            <h:outputText value="#{sites.stats.impressionsBid}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Impresisons Won</f:facet>
+            <h:outputText value="#{sites.stats.impressionsWon}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Clicks</f:facet>
+            <h:outputText value="#{sites.stats.clicks}"/>
+        </rich:column>
+
+        <rich:column>
+            <h:link value="Hourly" outcome="siteDetails">
+                <f:param name="siteRef" value="#{sites.entity.siteRef}"/>
+                <f:param name="campaignKey" value="#{campaignKey}"/>
+                <f:param name="cid" value="#{campaignsPage.cid}"/>
+            </h:link>
+
+            <h:outputText value=" / "/>
+
+            <h:link value="Placements" outcome="sitePlacements">
+                <f:param name="siteRef" value="#{sites.entity.siteRef}"/>
+                <f:param name="campaignKey" value="#{campaignKey}"/>
+                <f:param name="cid" value="#{campaignsPage.cid}"/>
+            </h:link>
+
+            <h:outputText value=" / "/>
+
+            <h:link value="Creatives" outcome="siteCreatives">
+                <f:param name="siteRef" value="#{sites.entity.siteRef}"/>
+                <f:param name="campaignKey" value="#{campaignKey}"/>
+                <f:param name="cid" value="#{campaignsPage.cid}"/>
+            </h:link>
+
+        </rich:column>
+    </rich:dataTable>
+</ui:composition>
+</html>

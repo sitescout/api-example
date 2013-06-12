@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
+<ui:composition>
+    <a4j:region rendered="#{campaignsPage.campaignKeyValidator() ne null}">
+        <rich:dataTable value="#{campaignsPage.getHourlyDetail(advertiserKey, campaignKey).statsList}" var="hourStats">
+            <rich:column>
+                <f:facet name="header">Hour</f:facet>
+                <h:outputText value="#{hourStats.hour}"/>
+            </rich:column>
+
+            <rich:column>
+                <f:facet name="header">Clicks</f:facet>
+                <h:outputText value="#{hourStats.stats.clicks}"/>
+            </rich:column>
+
+            <rich:column>
+                <f:facet name="header">Impressions Bid</f:facet>
+                <h:outputText value="#{hourStats.stats.impressionsBid}"/>
+            </rich:column>
+
+            <rich:column>
+                <f:facet name="header">Impressions Won</f:facet>
+                <h:outputText value="#{hourStats.stats.impressionsWon}"/>
+            </rich:column>
+
+            <rich:column>
+                <f:facet name="header">Auctions Spend</f:facet>
+                <h:outputText value="#{hourStats.stats.auctionsSpend}"/>
+            </rich:column>
+
+        </rich:dataTable>
+    </a4j:region>
+</ui:composition>
+</html>

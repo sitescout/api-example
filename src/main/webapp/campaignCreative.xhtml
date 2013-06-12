@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+    <rich:dataTable value="#{campaignDetailsCreativeStats.getDetails(advertiserKey, campaignKey).results}"
+                    var="creatives">
+        <rich:column>
+            <f:facet name="header">Creative ID</f:facet>
+            <h:outputText value="#{creatives.entity.creativeId}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Label</f:facet>
+            <h:outputText value="#{creatives.entity.label}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Review Status</f:facet>
+            <h:outputText value="#{creatives.entity.reviewStatus}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Format</f:facet>
+            <h:outputText value="#{creatives.entity.format}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Preview URL</f:facet>
+            <h:outputText value="#{creatives.entity.previewUrl}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Impresisons Bid</f:facet>
+            <h:outputText value="#{creatives.stats.impressionsBid}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Impresisons Won</f:facet>
+            <h:outputText value="#{creatives.stats.impressionsWon}"/>
+        </rich:column>
+
+        <rich:column>
+            <f:facet name="header">Clicks</f:facet>
+            <h:outputText value="#{creatives.stats.clicks}"/>
+        </rich:column>
+
+        <rich:column>
+            <h:link value="More Details" outcome="creativeDetails">
+                <f:param name="creativeId" value="#{creatives.entity.creativeId}"/>
+                <f:param name="campaignKey" value="#{campaignKey}"/>
+                <f:param name="cid" value="#{campaignsPage.cid}"/>
+            </h:link>
+        </rich:column>
+
+    </rich:dataTable>
+</ui:composition>
+</html>

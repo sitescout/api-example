@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:calendar="http://java.sun.com/jsf/composite/calendar">
+<f:metadata>
+    <f:viewParam name="siteRef" value="#{campaignDetailsSitePage.siteRef}"/>
+    <f:viewParam name="campaignKey" value="#{campaignDetailsSitePage.campaignKey}"/>
+</f:metadata>
+
+<ui:composition template="/templates/template.xhtml">
+
+    <ui:define name="title">Site Hourly Information</ui:define>
+
+    <ui:define name="title">Site Information</ui:define>
+    <ui:define name="body">
+        <h:form>
+
+            <calendar:calendar renderValue="siteHourlyTable"/>
+            <ui:include src="siteNavigation.xhtml"/>
+
+            <rich:panel style="width: 49%; display: inline-block; " header="Site Hourly Statistics">
+                <rich:dataTable id="siteHourlyTable"
+                                value="#{campaignDetailsSitePage.getSelectedSite(campaignDetailsSitePage.getSiteRef(), advertiserKey, campaignDetailsSitePage.getCampaignKey()).statsList}"
+                                var="siteHourStats">
+                    <rich:column>
+                        <f:facet name="header">Hour</f:facet>
+                        <h:outputText value="#{siteHourStats.hour}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Clicks</f:facet>
+                        <h:outputText value="#{siteHourStats.stats.clicks}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Impressions Bid</f:facet>
+                        <h:outputText value="#{siteHourStats.stats.impressionsBid}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Impressions Won</f:facet>
+                        <h:outputText value="#{siteHourStats.stats.impressionsWon}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Auctions Spend</f:facet>
+                        <h:outputText value="#{siteHourStats.stats.auctionsSpend}"/>
+                    </rich:column>
+
+                </rich:dataTable>
+            </rich:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+</html>

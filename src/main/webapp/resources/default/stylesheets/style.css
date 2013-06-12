@@ -1,0 +1,18 @@
+.vert-x-axis-chart .flot-x-axis .flot-tick-label {
+    -moz-transform: rotate(-45deg) translate(0, -45px) !important;
+    -webkit-transform: rotate(-45deg);
+}
+
+.vert-x-axis-chart .flot-y-axis .flot-tick-label {
+    font-size: 130%;
+}
+
+.rf-edt-r-act {
+    font-weight: normal !important;
+}
+
+.rf-edt-r-sel {
+    background-color: #ECF4FE !important;
+    font-weight: bold !important;
+}
+

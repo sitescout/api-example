@@ -1,0 +1,25 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <defaultProtocol type="Servlet 3.0"/>
+
+    <container qualifier="jbossas-remote-7" default="true">
+        <configuration>
+            <configuration>
+                <property name="username">bamboo</property>
+                <property name="password">S!t3Sc0ut</property>
+            </configuration>
+        </configuration>
+    </container>
+
+    <container qualifier="jbossas-managed-7" default="false">
+        <configuration>
+            <property name="jbossHome">/opt/jboss7/</property>
+            <property name="javaVmArguments">-Xmx512m -XX:MaxPermSize=128m
+                -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n
+            </property>
+        </configuration>
+    </container>
+
+</arquillian>

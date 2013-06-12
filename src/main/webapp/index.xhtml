@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:calendar="http://java.sun.com/jsf/composite/calendar">
+
+<ui:composition template="/templates/template.xhtml">
+
+    <ui:define name="title">Campaigns</ui:define>
+
+    <ui:define name="body">
+        <h:form>
+            <calendar:calendar renderValue="campaignTable, campaignDetails"/>
+
+            Total Count: <h:outputText value="#{campaignStats.getDetails(advertiserKey).totalCount}"/> <br/>
+            Status: #{campaignStats.getDetails(advertiserKey).status} <br/>
+            Page: #{campaignStats.getDetails(advertiserKey).pagination.page},
+            Page Size: #{campaignStats.getDetails(advertiserKey).pagination.pageSize} <br/>
+
+            <ui:include src="campaign.xhtml"/>
+
+            <a4j:outputPanel id="campaignDetails">
+                <a4j:region rendered="#{campaignsPage.selectedRow ne null}">
+
+                    <a4j:commandButton value="Hourly" render="campaignDetails"
+                                       action="#{campaignsPage.setTableHourly()}"/>
+                    <a4j:commandButton value="Sites" render="campaignDetails"
+                                       action="#{campaignsPage.setTableSites()}"/>
+                    <a4j:commandButton value="Creatives" render="campaignDetails"
+                                       action="#{campaignsPage.setTableCreatives()}"/>
+                    <a4j:commandButton value="Offers" render="campaignDetails"
+                                       action="#{campaignsPage.setTableOffers}"/>
+                    <br/>
+
+                    <rich:panel rendered="#{campaignsPage.hourly()}" style="width: 49%; display: inline-block; "
+                                header="Campaign Details">
+                        <ui:include src="campaignHourly.xhtml"/>
+                    </rich:panel>
+
+                    <rich:panel rendered="#{campaignsPage.sites()}" style="width: 49%; display: inline-block; "
+                                header="Site">
+                        <ui:include src="campaignSite.xhtml"/>
+                    </rich:panel>
+
+                    <rich:panel rendered="#{campaignsPage.creatives()}" style="width: 49%; display: inline-block; "
+                                header="Creatives">
+                        <ui:include src="campaignCreative.xhtml"/>
+                    </rich:panel>
+
+                    <rich:panel rendered="#{campaignsPage.offers()}" style="width: 49%; display: inline-block; "
+                                header="Offers">
+                        <ui:include src="campaignOffer.xhtml"/>
+                    </rich:panel>
+
+                </a4j:region>
+            </a4j:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

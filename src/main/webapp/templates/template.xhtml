@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+        >
+
+<h:head>
+    <title><ui:insert name="title">SiteScout RTB</ui:insert></title>
+    <meta http-equiv="content-type" content="text/xhtml; charset=UTF-8"/>
+
+    <h:outputStylesheet library="default" name="stylesheets/rtb_header.css"/>
+    <h:outputStylesheet library="default" name="stylesheets/style.css"/>
+
+    <ui:insert name="scripts"/>
+</h:head>
+
+<h:body onload="#{onload}">
+    <div id="header" style="background-image: url(#{resource['default/img/nav:headerbg.jpg']})">
+        <h:graphicImage library="default/img" name="ss-logo.png" style="padding-top: 5px;"/>
+    </div>
+    <div id="menu">
+        <h:form>
+            <rich:toolbar>
+                <h:link value="Home" outcome="home"/>
+                <h:commandLink value="Report API" action="#{campaignsPage.startConvo()}"/>
+            </rich:toolbar>
+        </h:form>
+    </div>
+    <div id="body">
+        <ui:insert name="body"/>
+    </div>
+</h:body>
+
+
+</html>
