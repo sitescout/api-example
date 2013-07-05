@@ -1,5 +1,6 @@
 package com.sitescout.dsp.api.model.dto.campaign;
 
+
 import com.sitescout.dsp.api.type.SpendCapType;
 
 public class BudgetDTO {

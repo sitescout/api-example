@@ -4,36 +4,109 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
-<ui:composition>
-    <a4j:region rendered="#{campaignsPage.campaignKeyValidator() ne null}">
-        <rich:dataTable value="#{campaignsPage.getHourlyDetail(advertiserKey, campaignKey).statsList}" var="hourStats">
-            <rich:column>
-                <f:facet name="header">Hour</f:facet>
-                <h:outputText value="#{hourStats.hour}"/>
-            </rich:column>
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:p="http://primefaces.org/ui">
 
-            <rich:column>
-                <f:facet name="header">Clicks</f:facet>
-                <h:outputText value="#{hourStats.stats.clicks}"/>
-            </rich:column>
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="campaignHourlyTable, barChartHourly"/>
+    <ui:define name="title">Campaign Hourly Information</ui:define>
 
-            <rich:column>
-                <f:facet name="header">Impressions Bid</f:facet>
-                <h:outputText value="#{hourStats.stats.impressionsBid}"/>
-            </rich:column>
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/{ <h:outputText value="#{advertiserKey}"/> }</span>
+            <span class="left-bar-button">/<h:commandLink value="campaigns"
+                                                          action="/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{campaignKey}"/></span>
+            <span class="left-bar-button-active">/stats</span>
+        </h:form>
+    </ui:define>
 
-            <rich:column>
-                <f:facet name="header">Impressions Won</f:facet>
-                <h:outputText value="#{hourStats.stats.impressionsWon}"/>
-            </rich:column>
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="campaignNavigation.xhtml"/>
+            <rich:panel style="width: 100%; display: inline-block; " header="Campaign Hourly Statistics">
 
-            <rich:column>
-                <f:facet name="header">Auctions Spend</f:facet>
-                <h:outputText value="#{hourStats.stats.auctionsSpend}"/>
-            </rich:column>
+                <rich:dataTable id="campaignHourlyTable"
+                                value="#{campaignsPage.getHourlyDetail(advertiserKey, campaignKey).statsList}"
+                                var="hourStats">
 
-        </rich:dataTable>
-    </a4j:region>
+                    <rich:column>
+                        <f:facet name="header">Hour</f:facet>
+                        <h:outputText value="#{hourStats.hour}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Clicks</f:facet>
+                        <h:outputText value="#{hourStats.stats.clicks}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Cost Per Click</f:facet>
+                        $<h:outputText value="#{hourStats.stats.costPerClick}">
+                        <f:convertNumber pattern="#0.000"/>
+                    </h:outputText>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Profit Per Click</f:facet>
+                        $<h:outputText value="#{hourStats.stats.profitPerClick}">
+                        <f:convertNumber pattern="#0.000"/>
+                    </h:outputText>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Impressions Bid</f:facet>
+                        <h:outputText value="#{hourStats.stats.impressionsBid}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Impressions Won</f:facet>
+                        <h:outputText value="#{hourStats.stats.impressionsWon}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Auctions Spend</f:facet>
+                        $<h:outputText value="#{hourStats.stats.auctionsSpend}">
+                        <f:convertNumber pattern="#0.000"/>
+                    </h:outputText>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Conversions</f:facet>
+                        <h:outputText value="#{hourStats.stats.conversions}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Conversion Rate</f:facet>
+                        <h:outputText value="#{hourStats.stats.conversionRate}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Revenue Per Mille</f:facet>
+                        $<h:outputText value="#{hourStats.stats.revenuePerMille}">
+                        <f:convertNumber pattern="#0.000"/>
+                    </h:outputText>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Revenue</f:facet>
+                        $<h:outputText value="#{hourStats.stats.revenue}"/>
+                    </rich:column>
+
+                </rich:dataTable>
+            </rich:panel>
+
+            <rich:panel id="barChartHourly">
+                <p:barChart value="#{campaignHourlyGraph.getCategoryModel(advertiserKey, campaignKey)}"
+                            legendPosition="ne"
+                            title="Campaign Hourly" style="height:400px" stacked="true" extender="ext" animate="true"
+                            rendered="#{campaignHourlyGraph.getCategoryModel(advertiserKey, campaignKey) ne null}"/>
+            </rich:panel>
+        </h:form>
+    </ui:define>
+
 </ui:composition>
 </html>

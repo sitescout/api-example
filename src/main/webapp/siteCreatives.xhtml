@@ -6,25 +6,35 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
-      xmlns:calendar="http://java.sun.com/jsf/composite/calendar">
-<f:metadata>
-    <f:viewParam name="siteRef" value="#{campaignDetailsSitePage.siteRef}"/>
-    <f:viewParam name="campaignKey" value="#{campaignDetailsSitePage.campaignKey}"/>
-</f:metadata>
+      xmlns:p="http://primefaces.org/ui">
 
-
-<ui:composition template="/templates/template.xhtml">
-
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="siteCreativeTable, barChartSitesCreatives"/>
     <ui:define name="title">Site Creative Information</ui:define>
-    <ui:define name="body">
-        <h:form>
-            <calendar:calendar renderValue="creativeTable"/>
-            <ui:include src="siteNavigation.xhtml"/>
 
-            <rich:panel style="width: 49%; display: inline-block; " header="Site Placement Statistics">
-                <rich:dataTable id="creativeTable"
-                                value="#{campaignDetailsSiteDetailsCreatives.getDetails(campaignDetailsSitePage.siteRef, advertiserKey, campaignDetailsSitePage.campaignKey).results}"
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/{ <h:outputText value="#{advertiserKey}"/> }</span>
+            <span class="left-bar-button">/<h:commandLink value="campaigns"
+                                                          action="/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span class="left-bar-button">/<h:commandLink value="sites"
+                                                          action="/sites.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{siteRef}"/></span>
+            <span class="left-bar-button-active">/creatives</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="siteNavigation.xhtml"/>
+            <rich:panel style="width: 100%; display: inline-block; " header="Site Creative Statistics">
+
+                <rich:dataTable id="siteCreativeTable"
+                                value="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).results}"
                                 var="siteCreativeStats">
+
                     <rich:column>
                         <f:facet name="header">Creative ID</f:facet>
                         <h:outputText value="#{siteCreativeStats.entity.creativeId}"/>
@@ -64,10 +74,21 @@
                         <f:facet name="header">Clicks</f:facet>
                         <h:outputText value="#{siteCreativeStats.stats.clicks}"/>
                     </rich:column>
+
                 </rich:dataTable>
+
             </rich:panel>
+
+            <rich:panel id="barChartSitesCreatives">
+                <p:barChart value="#{campaignDetailsCreativeGraph.getStatsModel(siteRef, advertiserKey, campaignKey)}"
+                            legendPosition="ne"
+                            title="Sites Creatives" style="height:400px" stacked="true" animate="true" extender="ext"
+                            rendered="#{campaignDetailsCreativeGraph.getStatsModel(siteRef, advertiserKey, campaignKey) ne null}"/>
+            </rich:panel>
+
         </h:form>
     </ui:define>
+
 </ui:composition>
 
 </html>

@@ -5,10 +5,10 @@
               http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd"
               version="2.2">
     <navigation-rule>
-        <from-view-id>/home.xhtml</from-view-id>
+        <from-view-id>/login.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>index</from-outcome>
-            <to-view-id>/index.xhtml</to-view-id>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/campaigns.xhtml</to-view-id>
             <redirect include-view-params="true"/>
         </navigation-case>
     </navigation-rule>

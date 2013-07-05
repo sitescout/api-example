@@ -4,11 +4,54 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
-        >
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:calendar="http://java.sun.com/jsf/composite/calendar"
+      xmlns:f="http://java.sun.com/jsf/core">
+
 
 <h:head>
-    <title><ui:insert name="title">SiteScout RTB</ui:insert></title>
+    <title><ui:insert name="title">SiteScout API</ui:insert></title>
     <meta http-equiv="content-type" content="text/xhtml; charset=UTF-8"/>
+
+    <script type="text/javascript">
+        function ext() {
+
+            this.cfg.axes.yaxis.tickOptions.showGridline = false;
+            this.cfg.axes.xaxis.tickOptions.showGridline = false;
+            //this.cfg.seriesDefaults.rendererOptions.highlightMouseOver = false;
+            this.cfg.highlighter.show = false;
+            this.cfg.varyBarColor = true;
+            this.cfg.seriesColors = [ "#00baff", "#cecece" ];
+            this.cfg.seriesDefaults.shadow = false;
+
+        }
+
+        function formatInt(input) {
+            var num = input.value.replace(/\,/g, '');
+            if (!isNaN(num)) {
+                if (num.indexOf('.') > -1) {
+                    input.value = input.value.substring(0, input.value.length - 1);
+                }
+            } else {
+                input.value = input.value.substring(0, input.value.length - 1);
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: { families: [ 'Open+Sans:300italic,400italic,400,300,600,700,800:latin' ] }
+        };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); </script>
 
     <h:outputStylesheet library="default" name="stylesheets/rtb_header.css"/>
     <h:outputStylesheet library="default" name="stylesheets/style.css"/>
@@ -16,19 +59,48 @@
     <ui:insert name="scripts"/>
 </h:head>
 
-<h:body onload="#{onload}">
-    <div id="header" style="background-image: url(#{resource['default/img/nav:headerbg.jpg']})">
-        <h:graphicImage library="default/img" name="ss-logo.png" style="padding-top: 5px;"/>
+<h:body>
+    <div id="header">
+        <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage library="default/img" name="logo_loader.gif" class="ss-logo"/>
+
+                <div class="loading-text">Loading...</div>
+            </f:facet>
+            <f:facet name="stop">
+                <h:graphicImage library="default/img" name="ss_logo_small.png" class="ss-logo"/>
+            </f:facet>
+        </a4j:status>
+
+        <div id="topbar-controls">
+            <a class="button icon-logout" href="#" title="Logout"></a>
+            <a class="button" href="#" title="Help">Help</a>
+        </div>
     </div>
     <div id="menu">
-        <h:form>
-            <rich:toolbar>
-                <h:link value="Home" outcome="home"/>
-                <h:commandLink value="Report API" action="#{campaignsPage.startConvo()}"/>
-            </rich:toolbar>
-        </h:form>
+
+        <rich:toolbar>
+            <h:form>
+                <h:commandLink value="Campaigns" action="campaigns"/>
+                <h:commandLink value="Advertisers"/>
+                <h:commandLink value="Control"/>
+            </h:form>
+
+            <div class="calendar-controls">
+                <h:form>
+                    <calendar:calendar renderValue="#{renderValue}"/>
+                </h:form>
+            </div>
+            <h:form>
+                <h:outputText value="Advertiser ID: "/>
+                <h:inputText value="#{advertiserKeyProducer.advertiserKey}"
+                             onkeypress="formatInt(this);"/>
+                <h:commandButton value="submit" action="/campaigns.xhtml?faces-redirect=true"/>
+            </h:form>
+        </rich:toolbar>
+
     </div>
-    <div id="body">
+    <div id="grid">
         <ui:insert name="body"/>
     </div>
 </h:body>

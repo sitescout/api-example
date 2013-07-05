@@ -1,5 +1,6 @@
 package com.sitescout.ui.data;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -20,16 +22,13 @@ import java.util.*;
  *
  * @author sean
  */
+@Named
 @ViewScoped
 public abstract class APIStatsEntity implements Serializable {
-    @Inject
-    CalendarBean calendarBean;
-    @Inject
-    Cache cache;
-    @Inject
-    APIConnection apiConnection;
-    @Inject
-    private Logger log;
+    @Inject CalendarBean calendarBean;
+    @Inject Cache cache;
+    @Inject APIConnection apiConnection;
+    @Inject private Logger log;
 
     protected Object getDetailsVarargs(String siteRef, Integer... keys) {
         //named weirdly do avoid EL resolution issues
@@ -41,7 +40,8 @@ public abstract class APIStatsEntity implements Serializable {
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.registerModule(new JodaModule());
-                cache.dataCache.put(url, mapper.readValue(apiConnection.getData(url), getEntityTypeReference()));
+                JsonParser dataReceived = apiConnection.getData(url);
+                cache.dataCache.put(url, mapper.readValue(dataReceived, getEntityTypeReference()));
             } catch (IOException e) {
                 log.error("Could not fetch API data from {}", url);
 
@@ -61,7 +61,7 @@ public abstract class APIStatsEntity implements Serializable {
     abstract TypeReference getEntityTypeReference();
 
     Map<String, String> getQueryParams() {
-        Map<String, String> querymap = new HashMap<String, String>();
+        Map<String, String> querymap = new HashMap<>();
         if (calendarBean.getDateFrom() != null) {
             querymap.put("dateFrom", formatAPIDate(calendarBean.getDateFrom()));
         }
@@ -72,7 +72,7 @@ public abstract class APIStatsEntity implements Serializable {
     }
 
     protected String getQueryString(Map<String, String> params) {
-        List<String> values = new ArrayList<String>(params.size());
+        List<String> values = new ArrayList<>(params.size());
         for (Map.Entry<String, String> entry : params.entrySet()) {
             values.add(entry.getKey() + "=" + entry.getValue());
         }
@@ -85,7 +85,5 @@ public abstract class APIStatsEntity implements Serializable {
     String formatAPIDate(Date date) {
         return apiDateFormatter.format(date);
     }
-
-
 }
 

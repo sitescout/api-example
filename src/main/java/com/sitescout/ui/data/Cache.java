@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A general-purpose cache for use in
+ * A general-purpose cache.
  */
 @Named
 @ViewScoped

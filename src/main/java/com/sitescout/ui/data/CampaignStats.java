@@ -8,7 +8,6 @@ import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
 
 import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
-import java.io.IOException;
 
 /**
  * Fetches the campaign statistics for a given advertiser.
@@ -19,15 +18,13 @@ import java.io.IOException;
 @ViewScoped
 public class CampaignStats extends APIStatsEntity {
 
-    StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> statsList;
 
-    public StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> getStatsList() {
-        return statsList;
-    }
+    public StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> getDetails(int advertiserKey) {
+        if (advertiserKey == 0) {
+            return null;
+        }
+        return (StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO>) super.getDetailsVarargs("", advertiserKey);
 
-    public StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> getDetails(int advertiserKey) throws IOException {
-        this.statsList = (StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO>) super.getDetailsVarargs("", advertiserKey);
-        return statsList;
     }
 
     @Override

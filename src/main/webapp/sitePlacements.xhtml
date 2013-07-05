@@ -6,75 +6,95 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
-      xmlns:calendar="http://java.sun.com/jsf/composite/calendar">
-<f:metadata>
-    <f:viewParam name="siteRef" value="#{campaignDetailsSitePage.siteRef}"/>
-    <f:viewParam name="campaignKey" value="#{campaignDetailsSitePage.campaignKey}"/>
-</f:metadata>
+      xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/templates/template.xhtml">
-
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="sitePlacementTable, barChartPlacements"/>
     <ui:define name="title">Site Placement Information</ui:define>
-    <ui:define name="body">
 
-        <calendar:calendar renderValue="placementTable"/>
-        <ui:include src="siteNavigation.xhtml"/>
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/{ <h:outputText value="#{advertiserKey}"/> }</span>
+            <span class="left-bar-button">/<h:commandLink value="campaigns"
+                                                          action="/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span class="left-bar-button">/<h:commandLink value="sites"
+                                                          action="/sites.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{siteRef}"/></span>
+            <span class="left-bar-button-active">/placements</span>
+        </h:form>
+    </ui:define>
 
-        <rich:panel style="width: 49%; display: inline-block; " header="Site Placement Statistics">
-            <rich:dataTable id="placementTable"
-                            value="#{campaignDetailsSiteDetailsPlacements.getDetails(campaignDetailsSitePage.siteRef, advertiserKey, campaignDetailsSitePage.campaignKey).results}"
-                            var="sitePlacementStats">
-                <rich:column>
-                    <f:facet name="header">Site Rule ID</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.ruleId}"/>
-                </rich:column>
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="siteNavigation.xhtml"/>
+            <rich:panel style="width: 100%; display: inline-block; " header="Site Placement Statistics">
 
-                <rich:column>
-                    <f:facet name="header">Dimentions</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.dimensions}"/>
-                </rich:column>
+                <rich:dataTable id="sitePlacementTable"
+                                value="#{sitePlacements.getDetails(siteRef, advertiserKey, campaignKey).results}"
+                                var="sitePlacementStats">
+                    <rich:column>
+                        <f:facet name="header">Site Rule ID</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.ruleId}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Page Position</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.pagePosition}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Dimentions</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.dimensions}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Site Reference</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.siteRef}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Page Position</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.pagePosition}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Review Status</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.reviewStatus}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Site Reference</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.siteRef}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Domain</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.domain}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Review Status</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.reviewStatus}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Bid</f:facet>
-                    <h:outputText value="#{sitePlacementStats.entity.bid}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Domain</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.domain}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Impresisons Bid</f:facet>
-                    <h:outputText value="#{sitePlacementStats.stats.impressionsBid}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Bid</f:facet>
+                        <h:outputText value="#{sitePlacementStats.entity.bid}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Impresisons Won</f:facet>
-                    <h:outputText value="#{sitePlacementStats.stats.impressionsWon}"/>
-                </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Impresisons Bid</f:facet>
+                        <h:outputText value="#{sitePlacementStats.stats.impressionsBid}"/>
+                    </rich:column>
 
-                <rich:column>
-                    <f:facet name="header">Clicks</f:facet>
-                    <h:outputText value="#{sitePlacementStats.stats.clicks}"/>
-                </rich:column>
-            </rich:dataTable>
-        </rich:panel>
+                    <rich:column>
+                        <f:facet name="header">Impresisons Won</f:facet>
+                        <h:outputText value="#{sitePlacementStats.stats.impressionsWon}"/>
+                    </rich:column>
+
+                    <rich:column>
+                        <f:facet name="header">Clicks</f:facet>
+                        <h:outputText value="#{sitePlacementStats.stats.clicks}"/>
+                    </rich:column>
+
+                </rich:dataTable>
+
+            </rich:panel>
+
+            <rich:panel id="barChartPlacements">
+                <p:barChart value="#{campaignDetailsSiteGraph.getStatsModel(siteRef, advertiserKey,campaignKey)}"
+                            legendPosition="ne"
+                            title="Sites Placements" style="height:300px" stacked="true" extender="ext" animate="true"
+                            rendered="#{campaignDetailsSiteGraph.getStatsModel(siteRef, advertiserKey,campaignKey) ne null}"/>
+            </rich:panel>
+        </h:form>
 
     </ui:define>
 </ui:composition>

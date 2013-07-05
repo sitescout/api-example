@@ -5,142 +5,149 @@ import com.sitescout.dsp.api.model.dto.stats.EntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.HourlyEntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
-import com.sitescout.ui.data.CampaignDetails;
+import com.sitescout.ui.AdvertiserKeyProducer;
+import com.sitescout.ui.api.APIConnection;
+import com.sitescout.ui.data.CampaignHourly;
 import com.sitescout.ui.data.CampaignStats;
-import com.sitescout.ui.qualifiers.Advertiser;
 import com.sitescout.ui.qualifiers.Campaign;
 import com.sitescout.ui.qualifiers.Key;
 
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The main page, allowing selection of campaigns.
- * This page will also validate which detail page the user is on (Hourly, Site, Creative, Offer)
- * Based on the validation, it will grab appropriate data for creating graphs.
- *
+ * Based on the selection, it will allow further navigation options: (Hourly, Sites, Creatives, Offers)
  * @author sean
  */
 @Named
 @ConversationScoped
 public class CampaignsPage implements Serializable {
 
-    @Inject
-    CampaignStats campaignStats;
-    @Inject
-    CampaignDetails campaignDetails;
+    @Inject private Conversation conversation;
+    @Inject CampaignStats campaignStats;
+    @Inject CampaignHourly campaignHourly;
+    @Inject APIConnection apiConnection;
+    @Inject AdvertiserKeyProducer advertiserKeyProducer;
+    @Inject Event<CampaignKeyChangeEvent> campaignKeyChangeEvent;
 
-    @Inject @Advertiser @Key
-    int advertiserKey;
-
-    enum detailType {hourly, sites, creatives, offers}
-
-    detailType type = detailType.hourly;
-    Collection<Object> selectedRow;
-    Integer prevSelectedCampaignKey;
+    Collection<Object> selectedRows;
     Integer campaignKey = 0;
-    StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> statsList;
-    @Inject
-    private Conversation conversation;
 
-    public String getCid() {
-        return conversation.getId();
+    public void advertiserKeyObserver(@Observes AdvertiserKeyProducer.AdvertiserKeyChangeEvent event) {
+        setCampaignKey(null);
+        setSelectedRows(null);
     }
 
-    public String startConvo() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-            return "index";
-        }
-        return "index";
+    public void validateSelectedCampaign(@Observes CalendarBean.DateChangeEvent event) {
+        updateSelectedRow();
     }
 
-    public String campaignKeyValidator() {
-        if (campaignKey == 0) {
-            return null;
-        }
-        return "load";
-    }
 
-    public Integer setCampaignKey() throws IOException {
-        int rowPosition = (Integer) selectedRow.iterator().next();
-        this.campaignKey = campaignStats.getStatsList().getResults().get(rowPosition).getEntity().getCampaignId();
-        return campaignKey;
-    }
-
-    @Named
-    @Produces
-    @Campaign
-    @Key
+    @Named @Produces @Campaign @Key
     public Integer getCampaignKey() {
         return campaignKey;
     }
 
-    public boolean hourly() {
-        return type == detailType.hourly;
+    public void setCampaignKey(Integer campaignKey) {
+        this.campaignKey = campaignKey;
+        updateSelectedRow();
+        campaignKeyChangeEvent.fire(new CampaignKeyChangeEvent());
     }
 
-    public boolean sites() {
-        return type == detailType.sites;
+    public Collection<Object> getSelectedRows() {
+        return selectedRows;
     }
 
-    public boolean creatives() {
-        return type == detailType.creatives;
+    public void setSelectedRows(Collection<Object> selectedCampaignKeys) {
+        this.selectedRows = selectedCampaignKeys;
     }
 
-    public boolean offers() {
-        return type == detailType.offers;
+    public Integer findNext(int campaignKey) {
+        StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> statList =
+                campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey());
+        for (EntityStatsDTO<CampaignDTO> entityStats : statList.getResults()) {
+            if (entityStats.getEntity().getCampaignId().equals(campaignKey)) {
+                int index = statList.getResults().indexOf(entityStats);
+                if (index == statList.getResults().size() - 1) {
+                    return null;
+                }
+                return statList.getResults().get(index + 1).getEntity().getCampaignId();
+            }
+        }
+        return null;
     }
 
-    public void setTableSites() {
-        this.type = detailType.sites;
+    public Integer findPrev(int campaignKey) {
+        StatsListDTO<EntityStatsDTO<CampaignDTO>, StatsDTO> statList =
+                campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey());
+        for (EntityStatsDTO<CampaignDTO> entityStats : statList.getResults()) {
+            if (entityStats.getEntity().getCampaignId().equals(campaignKey)) {
+                int index = statList.getResults().indexOf(entityStats);
+                if (index == 0) {
+                    return null;
+                }
+                return statList.getResults().get(index - 1).getEntity().getCampaignId();
+            }
+        }
+        return null;
     }
 
-    public void setTableCreatives() {
-        this.type = detailType.creatives;
+
+    public String startConvo() {
+        if (conversation.isTransient()) {
+            conversation.begin();
+            return apiConnection.authorize();
+        }
+        return apiConnection.authorize();
     }
 
-    public void setTableOffers() {
-        this.type = detailType.offers;
+    /**
+     * Update which campaign is selected, based on the currently selected row key.
+     */
+    public void updateSelectedCampaign() {
+        if (selectedRows.isEmpty()) {
+            this.campaignKey = 0;
+        } else {
+            int rowPosition = (Integer) selectedRows.iterator().next();
+            this.campaignKey = campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey())
+                    .getResults().get(rowPosition).getEntity().getCampaignId();
+        }
     }
 
-    public void setTableHourly() {
-        this.type = detailType.hourly;
-    }
-
-    public Collection<Object> getSelectedRow() throws IOException {
-        if (statsList != campaignStats.getStatsList()) {
-            statsList = campaignStats.getStatsList();
-            prevSelectedCampaignKey = campaignKey;
-            for (EntityStatsDTO<CampaignDTO> entityStats : campaignStats.getDetails(advertiserKey).getResults()) {
-                if (entityStats.getEntity().getCampaignId().equals(prevSelectedCampaignKey)) {
-                    int index = campaignStats.getStatsList().getResults().indexOf(entityStats);
-                    Collection<Object> row = new ArrayList();
-                    row.add(index);
-                    this.selectedRow = row;
-                    return row;
+    /**
+     * Ensure that the currently selected campaign is still visible.
+     * Set to none if that is not the case.
+     */
+    public void updateSelectedRow() {
+        if (this.selectedRows != null) {
+            this.selectedRows.clear();
+             List<EntityStatsDTO<CampaignDTO>> campaigns =
+                     campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey()).getResults();
+            for (int i = 0; i < campaigns.size(); i++) {
+                EntityStatsDTO<CampaignDTO> campaign = campaigns.get(i);
+                if (campaign.getEntity().getCampaignId().equals(getCampaignKey())) {
+                    this.selectedRows.add(i);
                 }
             }
-            setSelectedRow(null);
-            return null;
         }
-        return selectedRow;
     }
 
 
-    public void setSelectedRow(Collection<Object> selectedCampaignKeys) {
-        this.selectedRow = selectedCampaignKeys;
+    public HourlyEntityStatsDTO<CampaignDTO> getHourlyDetail(int advertiserKey, int campaignKey) {
+        return campaignHourly.getDetails(advertiserKey, campaignKey);
     }
 
-    public HourlyEntityStatsDTO<CampaignDTO> getHourlyDetail(int advertiserKey, int campaignKey) throws IOException {
-        return campaignDetails.getDetails(advertiserKey, campaignKey);
+    public class CampaignKeyChangeEvent {
+
     }
 }
 

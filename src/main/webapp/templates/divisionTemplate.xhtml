@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <h:outputStylesheet library="default" name="stylesheets/style.css"/>
+</h:head>
+<ui:composition template="/templates/template.xhtml">
+    <ui:define name="body">
+        <div id="container">
+            <div id="left" class="column">
+                <ui:insert name="left"/>
+            </div>
+
+            <div id="center" class="column">
+                <ui:insert name="center"/>
+            </div>
+
+            <div id="right" class="column">
+                <ui:insert name="right"/>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

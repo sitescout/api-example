@@ -8,7 +8,7 @@
 
 <composite:interface>
 
-    <composite:attribute name="renderValue"/>
+    <composite:attribute name="renderValue" shortDescription="Defines the component(s) to be rerendered on update."/>
 
 </composite:interface>
 
@@ -17,7 +17,8 @@
 
         <h:outputText value="Date From:"/>
         <a4j:outputPanel layout="block">
-            <rich:calendar value="#{calendarBean.dateFrom}" datePattern="MMM d, yyyy">
+            <rich:calendar value="#{calendarBean.dateFrom}" datePattern="MMM d, yyyy" firstWeekDay="1"
+                    showWeeksBar="false">
                 <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}"/>
             </rich:calendar>
         </a4j:outputPanel>
@@ -25,7 +26,8 @@
         <h:outputText value="Date To:"/>
 
         <a4j:outputPanel layout="block">
-            <rich:calendar value="#{calendarBean.dateTo}" datePattern="MMM d, yyyy">
+            <rich:calendar value="#{calendarBean.dateTo}" datePattern="MMM d, yyyy" firstWeekDay="1"
+                    showWeeksBar="false">
                 <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}"/>
             </rich:calendar>
         </a4j:outputPanel>

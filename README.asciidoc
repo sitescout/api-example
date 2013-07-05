@@ -2,8 +2,6 @@
 
 == Configuration ==
 
-Edit APIConnection, adding your API client ID (_not_ your RTB login) and password.
-Edit AdvertiserKeyProducer with the advertiser identifier which you have access to.
 Install Wildfly 8 on your local machine.
 Ensure that it is available at (possibly symlinked) /opt/wildfly8/.
 
@@ -19,4 +17,4 @@ It can be run from within your IDE for easy development turnaround.
 
 == Viewing ==
 
-http://localhost:8080/api-example/index.jsf
+http://localhost:8080/api-example/login.jsf

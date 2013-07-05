@@ -1,3 +1,251 @@
+/*------body------*/
+
+body {
+    font-family: "Open Sans", Arial, sans serif;
+    margin: 0;
+    background: #f3f3f3;
+}
+
+:focus {
+    outline: none;
+}
+
+/*------Layout------*/
+
+div #container {
+    width: 100%;
+}
+
+div .column {
+    float: left;
+}
+
+div .sidebar {
+    margin: 10px;
+}
+
+div #center {
+    width: 78%;
+    padding-top: 20px;
+}
+
+div #left {
+    color: #b9b9b9;
+    height: 1000px;
+    width: 11%;
+    background: #2a3535;
+}
+
+div #right {
+    height: 1000px;
+    width: 11%;
+    background: #d2d2d2;
+}
+
+/*** IE6 Fix ***/
+* html #left {
+    left: 150px;           /* RC width */
+}
+
+/*------Topbar------*/
+
+.ss-logo {
+    padding: 15px 0 0 14px;
+}
+
+div .loading-text {
+    color: #777;
+    position: fixed;
+    top: 14px;
+    left: 200px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+div#topbar-controls {
+    height: 48px;
+    float: right;
+    vertical-align: middle;
+}
+
+.button {
+    color: #666;
+    height: 48px;
+    line-height: 48px;
+    float: right;
+    text-decoration: none;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0 16px;
+}
+
+.button:hover {
+    color: #fff;
+    height: 48px;
+    background-color: #00baff;
+    padding: 0 16px;
+}
+
+.icon-logout {
+    background-image: url("https://rtb.sitescout.com/beta/resources/icons/grey/logout.png");
+    background-repeat: no-repeat;
+    background-position: 50%;
+    width: 15px;
+}
+
+.icon-logout:hover {
+    background-image: url("https://rtb.sitescout.com/beta/resources/icons/white/logout.png");
+    background-repeat: no-repeat;
+    background-position: 50%;
+    width: 15px;
+}
+
+/*------Navbar------*/
+
+div#menu .rf-tb {
+    color: #adadad;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    background-color: #242424;
+    background-image: none;
+    height: 40px;
+    border: none;
+}
+
+div#menu a {
+    color: #adadad;
+    font-family: "Open Sans", Arial, sans-serif;
+    font-weight: 400;
+    text-decoration: none;
+    font-size: 14px;
+    padding-left: 20px;
+}
+
+div#menu a:hover {
+    color: #fff;
+}
+
+div #menu .rf-tb a:active {
+    color: #fff;
+}*/
+
+div .rf-tb-itm {
+    padding: 0;
+}
+
+div#menu input[type="text"] {
+    background-image: none;
+    background-color: #fff;
+    height: 18px;
+    border: none;
+}
+
+div#menu .rf-cal-popup {
+    color: #000;
+}
+
+/*------Left Bar------*/
+
+.left-bar-button {
+    border-bottom: 1px solid #444e4e;
+    padding: 20px 0;
+    display: block;
+    text-align: center;
+    font-size: 14px;
+}
+
+.left-bar-button-active {
+    border-bottom: 1px solid #444e4e;
+    border-right: 8px solid #00baff;
+    padding: 20px 0;
+    display: block;
+    text-align: center;
+    font-size: 14px;
+}
+
+div #left a {
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/*------Grid Header------*/
+
+div #grid-header {
+    background: #fff;
+    color: #5d5d5d;
+    width: 96%;
+    font-size: 25px;
+    font-weight: 600;
+    padding: 25px 0;
+    margin: 0 auto;
+    border-left: 1px solid #dadada;
+    border-top: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+div #campaign-title {
+    margin-left: 30px;
+    display: inline;
+}
+
+div #counter-display {
+    color: #888;
+    display: inline;
+    font-size: 13px;
+    font-weight: 400;
+    margin-left: 20px;
+}
+
+#pagination {
+    display: inline;
+    color: #888;
+    font-size: 13px;
+    font-weight: 400;
+    width: 100%;
+    padding: 5px;
+    margin-left: 20px;
+}
+
+div .rf-edt-hdr {
+    background-image: none;
+    background-color: #fff;
+}
+
+tr .rf-edt-hdr:hover {
+    background-image: none;
+    background-color: #fff;
+}
+
+div .rf-edt-hdr-c {
+    border-bottom: none;
+    border-right: none;
+    border-left: 1px solid #d9dde0;
+    padding: 3px 0;
+}
+
+div .rf-edt-c-srt {
+    color: #2f2f2f;
+    font-family: "Open Sans", Arial, sans-serif;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+div .rf-edt-c-srt:hover {
+    color: #444;
+}
+
+.rf-edt-srt-uns {
+    visibility: hidden;
+}
+
+/*------Grid------*/
+
 .vert-x-axis-chart .flot-x-axis .flot-tick-label {
     -moz-transform: rotate(-45deg) translate(0, -45px) !important;
     -webkit-transform: rotate(-45deg);
@@ -12,7 +260,160 @@
 }
 
 .rf-edt-r-sel {
-    background-color: #ECF4FE !important;
-    font-weight: bold !important;
+    background-color: #00baff !important;
 }
+
+.rf-edt-r-sel .rf-edt-c-cnt {
+    color: #fff;
+}
+
+div .rf-edt-c-j_idt32 {
+    border-left: none !important;
+}
+
+div .rf-edt-c-j_idt46 {
+    border-left: none !important;
+}
+
+div#grid td tr:hover {
+    background: #f0f0f0;
+}
+
+div .rf-edt {
+    width: 96%;
+    margin: 0 auto 15px;
+    border-top: none;
+    border-left: 1px solid #dadada;
+    border-bottom: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+    border-radius: 0 0 5px 5px;
+}
+
+div .rf-edt-tbl {
+    width: 100%;
+}
+
+div .rf-edt-c {
+    border-bottom: none;
+    border-right: none;
+    border-left: 1px solid #d9dde0;
+    padding: 3px 0;
+}
+
+div .rf-edt-c-cnt {
+    font-family: "Open Sans", Arial, sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div .rf-edt-ftr {
+    background-color: #fff;
+    border: none;
+}
+
+.rf-edt tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+/*------Right Bar------*/
+
+div #right a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #4c4c4c;
+}
+
+.right-bar-button {
+    border-bottom: 1px solid #c2c2c2;
+    padding: 20px 0;
+    display: block;
+    text-align: center;
+}
+
+.right-bar-button:hover {
+    background: #ddd;
+}
+
+div #right .rf-dt {
+    font-family: 'Open Sans', Arial, sans-serif;
+    margin: 20px auto 0 auto;
+    background-color: #d2d2d2;
+    border: none;
+    width: 77%;
+}
+
+div .rf-dt-hdr-c {
+    color: #727272;
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 13px;
+    padding: 0;
+    background-image: none;
+    background-color: #d2d2d2;
+    border: none;
+}
+
+div#right .ms-selected-title {
+    color: #4c4c4c;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 0 0 10px;
+    text-overflow: ellipsis;
+}
+
+div .rf-dt-c {
+    color: #363636;
+    border: none;
+    padding: 5px 0;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+div #right .metric-weight {
+    font-weight: 400;
+}
+
+tr .rf-dt-r .rf-dt-fst-r {
+    font-size: 20px;
+}
+
+/*------Campaign Details------*/
+
+div #campaign-details {
+    margin: 0 auto;
+}
+
+div .rf-p {
+    border: none;
+}
+
+div .rf-p-hdr {
+    background-image: none;
+    background-color: #f3f3f3;
+    border: none;
+}
+
+div .rf-dt-shdr-c {
+    background-image: none;
+    background-color: #f3f3f3;
+    color: #2f2f2f;
+}
+
+/*------Graph------*/
+
+div #graph-container {
+    margin: 0 auto 20px auto;
+    padding-top: 10px;
+    width: 96%;
+    background: #fff;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+}
+
+div #graph-size {
+    width: 96%;
+    margin: 0 auto;
+}
+
 

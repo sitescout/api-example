@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>SiteScout RTB</title>
+    <meta http-equiv="content-type" content="text/xhtml; charset=UTF-8"/>
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: { families: [ 'Open+Sans:300italic,400italic,400,300,600,700,800:latin' ] }
+        };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); </script>
+    <h:outputStylesheet library="default" name="stylesheets/style_home.css"/>
+
+
+</h:head>
+<h:body>
+
+    <h:form>
+        <div id="login-window">
+            <div id="centering">
+                <h:graphicImage library="default/img" name="login_lock.png" style="margin-right:11px"/>
+                <div id="login-title">SiteScout API Login
+                </div>
+                <p:inputText id="clientId" value="#{login.clientId}">
+                    <p:watermark for="clientId" value="Client ID"/>
+                </p:inputText>
+                <p:password id="clientSecret" value="#{login.clientSecret}">
+                    <p:watermark for="clientSecret" value="Client Secret"/>
+                </p:password>
+                <span class="remember-me">Remember me</span>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <h:commandButton value="Log In" action="#{campaignsPage.startConvo()}"/>
+            </div>
+        </div>
+    </h:form>
+
+</h:body>
+
+</html>

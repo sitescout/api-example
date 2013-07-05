@@ -3,26 +3,19 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich">
 
 <ui:composition>
 
     <rich:panel header="Navigation">
-        Previous: <h:link value="#{campaignDetailsSitePage.findPrev(campaignDetailsSitePage.siteRef)}">
-        <f:param name="campaignKey" value="#{campaignKey}"/>
-        <f:param name="siteRef" value="#{campaignDetailsSitePage.findPrev(campaignDetailsSitePage.siteRef)}"/>
-        <f:param name="cid" value="#{campaignsPage.cid}"/>
-    </h:link>
+        Previous: <h:commandLink value="#{sitesPage.findPrev(siteRef)}"
+                                 action="#{sitesPage.setSiteRef(sitesPage.findPrev(siteRef))}"/>
 
-        This siteRef: <h:outputText value="#{campaignDetailsSitePage.siteRef}"/>
+        This siteRef: <h:outputText value="#{siteRef}"/>
 
-        Next: <h:link value="#{campaignDetailsSitePage.findNext(campaignDetailsSitePage.siteRef)}">
-        <f:param name="campaignKey" value="#{campaignKey}"/>
-        <f:param name="siteRef" value="#{campaignDetailsSitePage.findNext(campaignDetailsSitePage.siteRef)}"/>
-        <f:param name="cid" value="#{campaignsPage.cid}"/>
-    </h:link>
+        Next: <h:commandLink value="#{sitesPage.findNext(siteRef)}"
+                             action="#{sitesPage.setSiteRef(sitesPage.findNext(siteRef))}"/>
 
     </rich:panel>
 

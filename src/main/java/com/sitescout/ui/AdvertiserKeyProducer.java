@@ -4,7 +4,9 @@ import com.sitescout.ui.qualifiers.Advertiser;
 import com.sitescout.ui.qualifiers.Key;
 
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 
@@ -13,14 +15,25 @@ import java.io.Serializable;
  *
  * @author sean
  */
+@Named
 @SessionScoped
 public class AdvertiserKeyProducer implements Serializable {
 
-    @Produces
-    @Named
-    @Advertiser
-    @Key
-    public int getAdvertiserKey() {
-        return -1;
+    Integer advertiserKey;
+    @Inject Event<AdvertiserKeyChangeEvent> advertiserKeyChangeEventEvent;
+
+    @Produces @Named @Advertiser @Key
+    public Integer getAdvertiserKey() {
+        return advertiserKey;
+    }
+
+    public void setAdvertiserKey(Integer advertiserKey) {
+        this.advertiserKey = advertiserKey;
+        advertiserKeyChangeEventEvent.fire(new AdvertiserKeyChangeEvent());
+
+    }
+
+    public class AdvertiserKeyChangeEvent {
+
     }
 }

@@ -1,3 +1,6 @@
 .gradle/
 build/
-
+.idea/
+dsp-ui-jsf.iml
+out/
+classes/

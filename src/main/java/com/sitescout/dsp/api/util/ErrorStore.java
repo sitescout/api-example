@@ -34,7 +34,7 @@ public class ErrorStore {
     public static String getMessage(String errorCode, String[] arguments) {
         String message = ERRORS.get(errorCode);
         if (message != null) {
-            return String.format(message, (Object[])arguments);
+            return String.format(message, (Object[]) arguments);
         }
         return "Unknown error";
     }

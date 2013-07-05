@@ -6,18 +6,19 @@ div#header {
     position: fixed;
     width: 100%;
     margin: 0;
-    height: 50px;
+    background-color: #f3f3f3;
+    height: 48px;
     top: 0;
+    z-index: 99;
 }
 
 div#menu {
     position: fixed;
-    top: 50px;
-    background-color: #D2DFF2;
+    top: 48px;
     width: 100%;
+    z-index: 98;
 }
 
-div#body {
-    padding: 10px;
-    margin-top: 70px;
+div#grid {
+    margin-top: 88px;
 }
