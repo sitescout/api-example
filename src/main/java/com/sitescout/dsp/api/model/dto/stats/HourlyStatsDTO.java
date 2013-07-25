@@ -1,13 +1,13 @@
 package com.sitescout.dsp.api.model.dto.stats;
 
 public class HourlyStatsDTO {
-    private int hour;
+    private Integer hour;
     private StatsDTO stats;
 
     public HourlyStatsDTO() {
     }
 
-    public int getHour() {
+    public Integer getHour() {
         return hour;
     }
 

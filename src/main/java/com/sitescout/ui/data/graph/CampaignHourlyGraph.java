@@ -3,9 +3,9 @@ package com.sitescout.ui.data.graph;
 import com.sitescout.dsp.api.model.dto.stats.HourlyEntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.HourlyStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
-import com.sitescout.ui.data.CampaignHourly;
-import com.sitescout.ui.data.CreativeHourly;
-import com.sitescout.ui.data.SiteHourly;
+import com.sitescout.ui.data.campaigns.CampaignHourly;
+import com.sitescout.ui.data.campaigns.CreativeHourly;
+import com.sitescout.ui.data.campaigns.SiteHourly;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
@@ -74,14 +74,14 @@ public class CampaignHourlyGraph implements Serializable {
         bids.setLabel("Bids");
         for (HourlyStatsDTO hourStats : campaignData.getStatsList()) {
             StatsDTO stats = hourStats.getStats();
-            bids.set(hourStats.getHour(), stats.getImpressionsBid() - stats.getImpressionsWon());
+            bids.set(hourStats.getHour().toString(), stats.getImpressionsBid() - stats.getImpressionsWon());
         }
 
         ChartSeries wins = new ChartSeries();
         wins.setLabel("Wins");
         for (HourlyStatsDTO hourStats : campaignData.getStatsList()) {
             StatsDTO stats = hourStats.getStats();
-            wins.set(hourStats.getHour(), stats.getImpressionsWon());
+            wins.set(hourStats.getHour().toString(), stats.getImpressionsWon());
         }
 
         if (!(wins.getData().isEmpty() && bids.getData().isEmpty())) {

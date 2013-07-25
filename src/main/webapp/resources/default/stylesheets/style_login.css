@@ -1,0 +1,151 @@
+body {
+    font-family: "Open Sans", Arial, sans serif;
+    margin: 0;
+    background: #f3f3f3;
+}
+
+div#login-window {
+    background: #373737;
+    border-radius: 5px;
+    width: 284px;
+    padding: 40px;
+    margin: -182px 0 0 -185px;
+    -webkit-box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+div#login-title {
+    display: inline;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#invalid-login-msg {
+    clear: both;
+    font-size: 11px;
+    background-color: #1D1D1D;
+    text-align: center;
+    border-radius: 4px;
+    color: #fff;
+    padding: 7px;
+    position: relative;
+    top: 15px;
+    margin-bottom: 12px;
+}
+
+#invalid-login-msg:after {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(29, 29, 29, 0);
+    border-top-color: #1d1d1d;
+    border-width: 10px;
+    left: 50%;
+    margin-left: -10px;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+div#login-window input[type="text"] {
+    background-image: none;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 13px;
+    margin-top: 30px;
+    width: 255px;
+}
+
+div#login-window input[type="text"]:hover {
+    background-image: none;
+    background-color: #fff;
+    border: 1px solid #00baff;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 13px;
+    margin-top: 30px;
+    width: 255px;
+}
+
+div#login-window input[type="password"] {
+    background-image: none;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 13px;
+    margin: 18px 0 20px 0;
+    width: 255px;
+}
+
+div#login-window input[type="password"]:hover {
+    background-image: none;
+    background-color: #fff;
+    border: 1px solid #00baff;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 13px;
+    margin: 18px 0 20px 0;
+    width: 255px;
+}
+
+div#login-window input[type="submit"] {
+    color: #fff;
+    background-image: none;
+    background-color: #00baff;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 13px;
+    margin-top: 20px;
+    width: 283px;
+}
+
+div#login-window input[type="submit"]:hover {
+    cursor: pointer;
+    color: #fff;
+    background-image: none;
+    background-color: #00acec;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 13px;
+    width: 283px;
+}
+
+.remember-me {
+    float: left;
+    color: #fff;
+    font-size: 12px;
+}
+
+.forgot-password {
+    float: right;
+    color: #9d9d9d;
+    font-size: 12px;
+    font-family: 'Open Sans', Arial, sans-serif;
+    text-decoration: none;
+}
+
+

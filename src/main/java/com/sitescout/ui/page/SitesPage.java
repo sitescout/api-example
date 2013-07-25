@@ -6,8 +6,8 @@ import com.sitescout.dsp.api.model.dto.stats.HourlyEntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
 import com.sitescout.ui.AdvertiserKeyProducer;
-import com.sitescout.ui.data.SiteHourly;
-import com.sitescout.ui.data.SiteStats;
+import com.sitescout.ui.data.campaigns.SiteHourly;
+import com.sitescout.ui.data.campaigns.SiteStats;
 import com.sitescout.ui.qualifiers.Key;
 import com.sitescout.ui.qualifiers.SiteReference;
 
@@ -38,6 +38,26 @@ public class SitesPage implements Serializable {
     String siteRef;
     Collection<Object> selectedRows;
 
+    public String next() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (siteStats.getDetails(advertiserKeyProducer.getAdvertiserKey(), campaignsPage.getCampaignKey())
+                    .getLink("next") != null) {
+                return "Next Page";
+            }
+        }
+        return "";
+    }
+
+    public String prev() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (siteStats.getDetails(advertiserKeyProducer.getAdvertiserKey(), campaignsPage.getCampaignKey())
+                    .getLink("prev") != null) {
+                return "Previous Page";
+            }
+        }
+        return "";
+    }
+
     public void campaignKeyObserver(@Observes CampaignsPage.CampaignKeyChangeEvent event) {
         setNull();
     }
@@ -57,15 +77,24 @@ public class SitesPage implements Serializable {
 
     public void setSiteRef(String siteRef) {
         this.siteRef = siteRef;
-        updateSelectedRow();
+        if (siteRef != null) {
+            updateSelectedRow();
+        }
     }
 
     public Collection<Object> getSelectedRows() {
         return selectedRows;
     }
 
-    public void setSelectedRows(Collection<Object> selectedCampaignKeys) {
-        this.selectedRows = selectedCampaignKeys;
+    public void setSelectedRows(Collection<Object> selectedRows) {
+        this.selectedRows = selectedRows;
+    }
+
+    public boolean rightPanelLoad() {
+        if (selectedRows == null) {
+            return false;
+        }
+        return !selectedRows.isEmpty();
     }
 
     public String findNext(String siteRef) {

@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="content, noData"/>
+    <ui:define name="title">Site Creative Information</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span><h:commandLink value="/campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span><h:commandLink value="/sites" action="/campaigns/sites.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{siteRef}"/></span>
+            <span class="left-bar-button lft-btn-active">/creatives</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="siteNavigation.xhtml"/>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel
+                        rendered="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).totalCount ne 0}">
+
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">Impressions Bid vs. Impressions Won</div>
+                            <rich:panel id="barChartSitesCreatives">
+                                <p:barChart
+                                        value="#{campaignDetailsCreativeGraph.getStatsModel(siteRef, advertiserKey, campaignKey)}"
+                                        legendPosition="ne"
+                                        style="height:160px" stacked="true" animate="true" extender="ext"/>
+                            </rich:panel>
+                        </div>
+                    </div>
+
+                    <div id="grid-header">
+                        <div id="campaign-title">Site Creatives</div>
+                        <div id="counter-display">
+                            <b><h:outputText
+                                    value="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).totalCount}"/></b> of
+                            <h:outputText
+                                    value="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).totalCount}"/> site creatives
+                        </div>
+                        <div id="pagination">
+                            Page:
+                            <b>#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).pagination.page}</b>
+                            Page Size:
+                            <b>#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).pagination.pageSize}</b>
+                        </div>
+                    </div>
+
+
+                    <rich:extendedDataTable id="siteCreativeTable"
+                                            value="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).results}"
+                                            var="siteCreativeStats"
+                                            rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{siteCreativeStats.entity.creativeId}">
+                            <f:facet name="header">Creative ID</f:facet>
+                            <h:outputText value="#{siteCreativeStats.entity.creativeId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.entity.label}">
+                            <f:facet name="header">Label</f:facet>
+                            <h:outputText value="#{siteCreativeStats.entity.label}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.entity.reviewStatus}">
+                            <f:facet name="header">Review Status</f:facet>
+                            <h:outputText value="#{siteCreativeStats.entity.reviewStatus}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.entity.format}">
+                            <f:facet name="header">Format</f:facet>
+                            <h:outputText value="#{siteCreativeStats.entity.format}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.entity.previewUrl}">
+                            <f:facet name="header">Preview URL</f:facet>
+                            <h:outputText value="#{siteCreativeStats.entity.previewUrl}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.stats.impressionsBid}">
+                            <f:facet name="header">Impressions Bid</f:facet>
+                            <h:outputText value="#{siteCreativeStats.stats.impressionsBid}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.stats.impressionsWon}">
+                            <f:facet name="header">Impressions Won</f:facet>
+                            <h:outputText value="#{siteCreativeStats.stats.impressionsWon}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteCreativeStats.stats.clicks}">
+                            <f:facet name="header">Clicks</f:facet>
+                            <h:outputText value="#{siteCreativeStats.stats.clicks}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel
+                        rendered="#{siteCreatives.getDetails(siteRef, advertiserKey, campaignKey).totalCount eq 0}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+</html>

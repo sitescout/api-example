@@ -4,7 +4,7 @@ import com.sitescout.dsp.api.model.dto.OfferDTO;
 import com.sitescout.dsp.api.model.dto.stats.EntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
-import com.sitescout.ui.data.OfferStats;
+import com.sitescout.ui.data.campaigns.OfferStats;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 

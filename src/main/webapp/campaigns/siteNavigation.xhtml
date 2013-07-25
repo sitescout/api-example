@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition>
+
+    <div id="nav-container">
+        <div id="nav-wrapper">
+            <div id="previous-id">Previous Id: <h:commandLink value="#{sitesPage.findPrev(siteRef)}"
+                                                              action="#{sitesPage.setSiteRef(sitesPage.findPrev(siteRef))}"/>
+            </div>
+            <div id="current-id">
+                Current Site Reference Id: <b><h:outputText value="#{siteRef}"/></b>
+            </div>
+            <div id="next-id">
+                Next Id: <h:commandLink value="#{sitesPage.findNext(siteRef)}"
+                                        action="#{sitesPage.setSiteRef(sitesPage.findNext(siteRef))}"/>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>
+</html>

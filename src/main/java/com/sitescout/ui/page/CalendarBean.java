@@ -26,15 +26,31 @@ public class CalendarBean implements Serializable {
     }
 
     public void setDateFrom(Date dateFrom) {
-            if (this.dateFrom != null) {
-                if (!this.dateFrom.equals(dateFrom)) {
-                    this.dateFrom = dateFrom;
-                    dateChangeEvent.fire(new DateChangeEvent());
-                }
-            } else {
+        if (dateFrom == null) {
+            this.dateFrom = null;
+            this.dateTo = null;
+            dateChangeEvent.fire(new DateChangeEvent());
+            return;
+        }
+        if (dateFrom.after(new Date())) {
+            return;
+        }
+
+        if (this.dateFrom != null) {
+            if (!this.dateFrom.equals(dateFrom)) {
                 this.dateFrom = dateFrom;
+                if (dateTo != null && dateFrom.after(dateTo)) {
+                    this.dateTo = null;
+                }
                 dateChangeEvent.fire(new DateChangeEvent());
             }
+        } else {
+            this.dateFrom = dateFrom;
+            if (dateTo != null && dateFrom.after(dateTo)) {
+                this.dateTo = null;
+            }
+            dateChangeEvent.fire(new DateChangeEvent());
+        }
     }
 
     public Date getDateTo() {
@@ -42,9 +58,17 @@ public class CalendarBean implements Serializable {
     }
 
     public void setDateTo(Date dateTo) {
-
-            if (this.dateFrom != null) {
-                if (!this.dateFrom.equals(dateFrom)) {
+        if (dateTo == null) {
+            this.dateTo = null;
+            dateChangeEvent.fire(new DateChangeEvent());
+            return;
+        }
+        if (dateTo.after(new Date())) {
+            return;
+        }
+        if (dateTo.after(dateFrom)) {
+            if (this.dateTo != null) {
+                if (!this.dateTo.equals(dateTo)) {
                     this.dateTo = dateTo;
                     dateChangeEvent.fire(new DateChangeEvent());
                 }
@@ -52,6 +76,7 @@ public class CalendarBean implements Serializable {
                 this.dateTo = dateTo;
                 dateChangeEvent.fire(new DateChangeEvent());
             }
+        }
     }
 
     /**

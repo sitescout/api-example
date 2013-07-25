@@ -56,11 +56,11 @@ public abstract class APIStatsEntity implements Serializable {
         return cache.dataCache.get(url);
     }
 
-    abstract String getLink(String siteRef, Integer... key);
+    protected abstract String getLink(String siteRef, Integer... key);
 
-    abstract TypeReference getEntityTypeReference();
+    protected abstract TypeReference getEntityTypeReference();
 
-    Map<String, String> getQueryParams() {
+    protected Map<String, String> getQueryParams() {
         Map<String, String> querymap = new HashMap<>();
         if (calendarBean.getDateFrom() != null) {
             querymap.put("dateFrom", formatAPIDate(calendarBean.getDateFrom()));

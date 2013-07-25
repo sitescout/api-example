@@ -6,6 +6,10 @@ public class DeniedAttributesDTO {
     private Set<String> verticals;
     private Set<String> creativeTypes;
 
+    public DeniedAttributesDTO(){
+
+    }
+
     public DeniedAttributesDTO(Set<String> verticals, Set<String> creativeTypes) {
         this.verticals = verticals;
         this.creativeTypes = creativeTypes;

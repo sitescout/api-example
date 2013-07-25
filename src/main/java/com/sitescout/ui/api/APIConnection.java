@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitescout.ui.AdvertiserKeyProducer;
+import com.sitescout.ui.data.control.DeniedAttributes;
 import com.sitescout.ui.page.Login;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.*;
@@ -44,6 +45,7 @@ public class APIConnection implements Serializable {
     @Inject private Logger log;
     @Inject Login login;
     @Inject AdvertiserKeyProducer advertiserKeyProducer;
+    @Inject DeniedAttributes deniedAttributes;
 
     static final String AUTHORIZATION_URL = "https://api.sitescout.com/oauth/token";
 
@@ -111,7 +113,7 @@ public class APIConnection implements Serializable {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("grant_type", "client_credentials"));
-            params.add(new BasicNameValuePair("scope", "stats"));
+            //params.add(new BasicNameValuePair("scope", "stats"));
             params.add(new BasicNameValuePair("expect-continue", "true"));
             post.setEntity(new UrlEncodedFormEntity(params));
             long startTimeHTTP = System.currentTimeMillis();
@@ -122,6 +124,7 @@ public class APIConnection implements Serializable {
             String response = rd.readLine();
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(response);
+
             if (httpResponse.getStatusLine().getStatusCode() > 399) {
                 throw new APIResponseException("An exception occurred during authorization.", response);
             }
@@ -130,7 +133,7 @@ public class APIConnection implements Serializable {
             String accessToken = rootNode.get("access_token").toString();
             this.accessToken = accessToken.replace("\"", "");
         } catch (Exception e) {
-            throw new RuntimeException("Could not authorize.", e);
+            return "login_invalid";
         }
         log.debug("Authorization time: " + (System.currentTimeMillis() - startTime));
         return "success";
@@ -151,15 +154,6 @@ public class APIConnection implements Serializable {
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
         String response = rd.readLine();
-
-
-        if (httpResponse.getStatusLine().getStatusCode() == 403) {
-            advertiserKeyProducer.setAdvertiserKey(null);
-            throw new NoAccessException();
-        } else if (httpResponse.getStatusLine().getStatusCode() > 399) {
-            throw new APIResponseException("An exception occurred during authorization.", response);
-        }
-
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(response);
         JsonParser jp = mapper.treeAsTokens(rootNode);

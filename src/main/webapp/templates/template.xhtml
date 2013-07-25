@@ -12,30 +12,36 @@
 <h:head>
     <title><ui:insert name="title">SiteScout API</ui:insert></title>
     <meta http-equiv="content-type" content="text/xhtml; charset=UTF-8"/>
-
     <script type="text/javascript">
+
         function ext() {
 
-            this.cfg.axes.yaxis.tickOptions.showGridline = false;
             this.cfg.axes.xaxis.tickOptions.showGridline = false;
             //this.cfg.seriesDefaults.rendererOptions.highlightMouseOver = false;
             this.cfg.highlighter.show = false;
             this.cfg.varyBarColor = true;
             this.cfg.seriesColors = [ "#00baff", "#cecece" ];
             this.cfg.seriesDefaults.shadow = false;
-
+            this.cfg.leg = false;
+            this.cfg.grid = { drawBorder: false,
+                shadow: false,
+                background: "white"};
         }
+
 
         function formatInt(input) {
-            var num = input.value.replace(/\,/g, '');
-            if (!isNaN(num)) {
-                if (num.indexOf('.') > -1) {
-                    input.value = input.value.substring(0, input.value.length - 1);
-                }
-            } else {
-                input.value = input.value.substring(0, input.value.length - 1);
-            }
+
+            input.value = input.value.replace(/\D/g, '');
+
         }
+
+        function formatSiteRef(input) {
+
+            input.value = input.value.replace(/[^\d\-]/g, '');
+
+        }
+
+
 
     </script>
 
@@ -53,6 +59,8 @@
             s.parentNode.insertBefore(wf, s);
         })(); </script>
 
+
+
     <h:outputStylesheet library="default" name="stylesheets/rtb_header.css"/>
     <h:outputStylesheet library="default" name="stylesheets/style.css"/>
 
@@ -61,42 +69,50 @@
 
 <h:body>
     <div id="header">
+        <h:graphicImage library="default/img" name="ss_logo_white.png" href="#" class="ss-logo"/>
         <a4j:status>
             <f:facet name="start">
-                <h:graphicImage library="default/img" name="logo_loader.gif" class="ss-logo"/>
-
-                <div class="loading-text">Loading...</div>
-            </f:facet>
-            <f:facet name="stop">
-                <h:graphicImage library="default/img" name="ss_logo_small.png" class="ss-logo"/>
+                <h:graphicImage library="default/img" name="loading_white.gif" class="loading-text"/>
             </f:facet>
         </a4j:status>
-
         <div id="topbar-controls">
-            <a class="button icon-logout" href="#" title="Logout"></a>
-            <a class="button" href="#" title="Help">Help</a>
+            <a class="button icon-logout" href="#" title="Logout"/>
+
         </div>
     </div>
     <div id="menu">
 
         <rich:toolbar>
+            <rich:toolbarGroup style="padding:0;">
             <h:form>
-                <h:commandLink value="Campaigns" action="campaigns"/>
-                <h:commandLink value="Advertisers"/>
-                <h:commandLink value="Control"/>
+                <h:commandLink value="Intro" action="/index.xhtml?faces-redirect=true"
+                               styleClass="#{(request.requestURI eq '/api-example/index.jsf') ? 'active' : 'not-active'}"/>
+                <h:commandLink value="Campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"
+                               styleClass="#{(request.requestURI.contains('/api-example/campaigns/')) ? 'active' : 'not-active'}"/>
+                <h:commandLink value="Audiences" action="/audience/audiences.xhtml?faces-redirect=true"
+                               styleClass="#{(request.requestURI.contains('/api-example/audience/')) ? 'active' : 'not-active'}"/>
+                <h:commandLink value="Control" action="/control/control.xhtml?faces-redirect=true"
+                               styleClass="#{(request.requestURI.contains('/api-example/control/')) ? 'active' : 'not-active'}"/>
             </h:form>
+            </rich:toolbarGroup>
 
+            <rich:toolbarGroup location="right" style="padding:0;">
             <div class="calendar-controls">
-                <h:form>
                     <calendar:calendar renderValue="#{renderValue}"/>
-                </h:form>
             </div>
-            <h:form>
-                <h:outputText value="Advertiser ID: "/>
-                <h:inputText value="#{advertiserKeyProducer.advertiserKey}"
-                             onkeypress="formatInt(this);"/>
-                <h:commandButton value="submit" action="/campaigns.xhtml?faces-redirect=true"/>
+            <h:form style="margin-right:8px;margin-left:15px">
+                <h:panelGrid columns="4">
+                    <h:outputText id="advertiserId" value="Advertiser ID:"/>
+                    <h:inputText id="aId" value="#{advertiserKeyProducer.advertiserKey}"
+                                 onkeyup="formatInt(this);">
+                        <f:validator validatorId="com.sitescout.AdvertiserKeyValidator"/>
+                        <rich:placeholder value="Enter advertiser Id..."/>
+                    </h:inputText>
+                    <rich:messages for="aId"/>
+                    <h:commandButton value="Submit" action="#{advertiserKeyProducer.redirect()}"/>
+                </h:panelGrid>
             </h:form>
+            </rich:toolbarGroup>
         </rich:toolbar>
 
     </div>

@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="content, noData"/>
+    <ui:define name="title">Campaign Offers</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span><h:commandLink value="/campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{campaignKey}"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span class="left-bar-button lft-btn-active">/offers</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="campaignNavigation.xhtml"/>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel rendered="#{offerStats.getDetails(advertiserKey, campaignKey).totalCount ne 0}">
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">Impressions Bid vs. Impressions Won</div>
+                            <rich:panel id="barChartOffers">
+                                <p:barChart
+                                        value="#{campaignDetailsOfferGraph.getStatsModel(advertiserKey, campaignKey)}"
+                                        legendPosition="ne"
+                                        style="height:160px" stacked="true" animate="true"
+                                        extender="ext"
+                                        rendered="#{campaignDetailsOfferGraph.getStatsModel(advertiserKey, campaignKey) ne null}"/>
+                            </rich:panel>
+                        </div>
+                    </div>
+
+                    <div id="grid-header">
+                        <div id="campaign-title">Offers</div>
+
+                    </div>
+                    <rich:extendedDataTable id="offersTable"
+                                            value="#{offerStats.getDetails(advertiserKey, campaignKey).results}"
+                                            var="result"
+                                            rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{result.entity.offerId}">
+                            <f:facet name="header">Offer ID</f:facet>
+                            <h:outputText value="#{result.entity.offerId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.name}">
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputText value="#{result.entity.name}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.links}">
+                            <f:facet name="header">Links</f:facet>
+                            <h:outputText value="#{result.entity.links}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.stats.impressionsBid}">
+                            <f:facet name="header">Impressions Bid</f:facet>
+                            $<h:outputText value="#{result.stats.impressionsBid}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.stats.impressionsWon}">
+                            <f:facet name="header">Impressions Won</f:facet>
+                            <h:outputText value="#{result.stats.impressionsWon}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.stats.clicks}">
+                            <f:facet name="header">Clicks</f:facet>
+                            <h:outputText value="#{result.stats.clicks}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel rendered="#{offerStats.getDetails(advertiserKey, campaignKey).totalCount eq 0}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+</html>

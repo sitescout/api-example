@@ -7,8 +7,8 @@ import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
 import com.sitescout.ui.AdvertiserKeyProducer;
 import com.sitescout.ui.api.APIConnection;
-import com.sitescout.ui.data.CampaignHourly;
-import com.sitescout.ui.data.CampaignStats;
+import com.sitescout.ui.data.campaigns.CampaignHourly;
+import com.sitescout.ui.data.campaigns.CampaignStats;
 import com.sitescout.ui.qualifiers.Campaign;
 import com.sitescout.ui.qualifiers.Key;
 
@@ -42,12 +42,33 @@ public class CampaignsPage implements Serializable {
     Collection<Object> selectedRows;
     Integer campaignKey = 0;
 
+
+    public String next() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey()).getLink("next") != null) {
+                return "Next Page";
+            }
+        }
+        return "";
+    }
+
+    public String prev() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (campaignStats.getDetails(advertiserKeyProducer.getAdvertiserKey()).getLink("prev") != null) {
+                return "Previous Page";
+            }
+        }
+            return "";
+    }
+
     public void advertiserKeyObserver(@Observes AdvertiserKeyProducer.AdvertiserKeyChangeEvent event) {
         setCampaignKey(null);
         setSelectedRows(null);
+        campaignStats.setPageNum(1);
     }
 
     public void validateSelectedCampaign(@Observes CalendarBean.DateChangeEvent event) {
+        campaignStats.setPageNum(1);
         updateSelectedRow();
     }
 
@@ -59,7 +80,9 @@ public class CampaignsPage implements Serializable {
 
     public void setCampaignKey(Integer campaignKey) {
         this.campaignKey = campaignKey;
-        updateSelectedRow();
+        if (campaignKey != null) {
+            updateSelectedRow();
+        }
         campaignKeyChangeEvent.fire(new CampaignKeyChangeEvent());
     }
 
@@ -67,8 +90,15 @@ public class CampaignsPage implements Serializable {
         return selectedRows;
     }
 
-    public void setSelectedRows(Collection<Object> selectedCampaignKeys) {
-        this.selectedRows = selectedCampaignKeys;
+    public void setSelectedRows(Collection<Object> selectedRows) {
+        this.selectedRows = selectedRows;
+    }
+
+    public boolean rightPanelLoad() {
+        if (selectedRows == null) {
+            return false;
+        }
+        return !selectedRows.isEmpty();
     }
 
     public Integer findNext(int campaignKey) {
@@ -114,6 +144,9 @@ public class CampaignsPage implements Serializable {
      * Update which campaign is selected, based on the currently selected row key.
      */
     public void updateSelectedCampaign() {
+        if (selectedRows == null) {
+            return;
+        }
         if (selectedRows.isEmpty()) {
             this.campaignKey = 0;
         } else {

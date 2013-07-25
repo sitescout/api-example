@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:define name="title">Introduction</ui:define>
+
+    <ui:define name="left">
+        <div class="intro-leftbar">
+           <div class="intro-sidebar-heading">Current Level</div>
+           <div>The left sidebar will display your current level in the API structure.
+               <br/>
+               <br/>From here you will also be able to go back to previous levels.
+           </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="center">
+        <div class="center-frame">
+            <div class="intro-top">
+               <div class="intro-heading">Welcome to the SiteScout API!</div>
+               <div class="intro-body">
+                   This interface is an example use of the SiteScout API, designed to help you understand its functions and structure.
+                   <br/>Please bear with us, as it is a work in progress. We hope to add more content for you to explore soon.
+                   <br/>
+                   <br/>Thanks for looking!
+               </div>
+            </div>
+            <div class="intro-subhead">Getting Started</div>
+            <div class="intro-bottom">
+               <div class="intro-left">
+                   <div class="intro-numbers">1</div>
+                   <div class="intro-body">
+                       <b>Enter an advertiser ID</b> in the toolbar at the top right to access data for that ID.
+                       <br/>
+                       <br/>(If you don’t see any data, you may have forgotten this step.)
+                   </div>
+               </div>
+                <div class="intro-right">
+                    <div class="intro-numbers">3</div>
+                    <div class="intro-body">
+                        <b>Click on data in the tables</b> to display further navigation and additional stats in the right sidebar.
+                    </div>
+                </div>
+               <div class="intro-center">
+                   <div class="intro-numbers">2</div>
+                   <div class="intro-body">
+                       <b>Click on Campaigns, Audiences or Control</b> at the top left to start viewing data.
+                       <br/>
+                       <br/>Adjust the date range of the displayed data in the toolbar at the top right.
+                   </div>
+               </div>
+            </div>
+            <div class="intro-support">
+                <div class="intro-body">
+                    For additional information, head over to the <a href="http://www.sitescout.com/support/api/">SiteScout API Documentation</a> in the Knowledge Center.
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="right">
+        <div class="intro-rightbar">
+           <div class="intro-sidebar-heading">Next Level</div>
+           <div>The right sidebar will display where you can go from your current level in the API.
+               <br/>
+               <br/>Underneath the navigation, you will also see additional data for certain levels.
+           </div>
+        </div>
+    </ui:define>
+
+
+    </ui:composition>
+
+</html>

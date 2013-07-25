@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+
+    <rich:dataTable value="#{campaignOmittedStats.getDetails(advertiserKey, campaignKey)}" var="result">
+        <f:facet name="header">More Stats</f:facet>
+
+        <rich:column colspan="2" styleClass="ms-selected-title">
+            <h:outputText value="#{result.entity.name}"/>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="Clicks" title="Clicks"/>
+        </rich:column>
+
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.clicks eq 0 ? '-' : result.stats.clicks}">
+                <f:convertNumber pattern="###,###"/>
+            </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="CPC" title="Cost Per Click"/>
+        </rich:column>
+
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.costPerClick eq 0 ? '-' : result.stats.costPerClick}">
+            <f:convertNumber type="currency" currencyCode="USD" minFractionDigits="3"/>
+        </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="Conversions" title="Conversions"/>
+        </rich:column>
+
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.conversions eq 0 ? '-' : result.stats.conversions}">
+                <f:convertNumber pattern="###,###"/>
+            </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="PPC" title="Profit Per Click"/>
+        </rich:column>
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.profitPerClick eq 0 ? '-' : result.stats.profitPerClick}">
+            <f:convertNumber type="currency" currencyCode="USD" minFractionDigits="3"/>
+        </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="CPA" title="Cost Per Acquisition"/>
+        </rich:column>
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.costPerAcquisition eq 0 ? '-' : result.stats.costPerAcquisition}">
+            <f:convertNumber type="currency" minFractionDigits="3"/>
+        </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="RPM" title="Revenue Per Mille"/>
+        </rich:column>
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.revenuePerMille eq 0 ? '-' : result.stats.revenuePerMille}">
+            <f:convertNumber type="currency" minFractionDigits="3"/>
+        </h:outputText>
+        </rich:column>
+
+        <rich:column breakRowBefore="true">
+            <h:outputText value="Revenue" title="Revenue"/>
+        </rich:column>
+        <rich:column styleClass="metric-weight">
+            <h:outputText value="#{result.stats.revenue eq 0 ? '-' : result.stats.revenue}">
+            <f:convertNumber type="currency" minFractionDigits="3"/>
+        </h:outputText>
+        </rich:column>
+
+    </rich:dataTable>
+</ui:composition>
+
+</html>

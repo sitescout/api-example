@@ -4,7 +4,7 @@ import com.sitescout.dsp.api.model.dto.CampaignDTO;
 import com.sitescout.dsp.api.model.dto.stats.EntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
-import com.sitescout.ui.data.CampaignStats;
+import com.sitescout.ui.data.campaigns.CampaignStats;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
@@ -29,14 +29,14 @@ public class CampaignStatsGraph {
 
         for (EntityStatsDTO<CampaignDTO> entities : campaignStatData.getResults()) {
             StatsDTO stats = entities.getStats();
-            bids.set(entities.getEntity().getName(), stats.getImpressionsBid() - stats.getImpressionsWon());
+            bids.set(entities.getEntity().getCampaignId().toString(), stats.getImpressionsBid() - stats.getImpressionsWon());
         }
 
         ChartSeries wins = new ChartSeries();
         wins.setLabel("Wins");
         for (EntityStatsDTO<CampaignDTO> entities : campaignStatData.getResults()) {
             StatsDTO stats = entities.getStats();
-            wins.set(entities.getEntity().getName(), stats.getImpressionsWon());
+            wins.set(entities.getEntity().getCampaignId().toString(), stats.getImpressionsWon());
         }
         statModel.addSeries(wins);
         statModel.addSeries(bids);
@@ -47,7 +47,9 @@ public class CampaignStatsGraph {
             return null;
         }
         campaignStatsData = campaignStats.getDetails(advertiserKey);
-
+        if (campaignStatsData.getTotalCount() == 0) {
+            return null;
+        }
         createStatModel(campaignStatsData);
         return statModel;
     }

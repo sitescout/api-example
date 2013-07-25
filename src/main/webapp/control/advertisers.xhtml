@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:define name="title">Advertisers</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+
+            <a4j:region rendered="#{advertiserKey ne null}">
+                <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+                <span class="left-bar-button">/advertisers</span>
+                <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/> </span>
+            </a4j:region>
+
+            <a4j:region rendered="#{advertiserKey == null}">
+                <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+                <span class="left-bar-button lft-btn-active">/advertisers</span>
+            </a4j:region>
+        </h:form>
+
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <a4j:region rendered="#{advertiserKey == null}">
+                <div class="center-frame">
+                    <div class="no-data-text">
+                        Please input an advertiser key at top right.
+                    </div>
+                </div>
+            </a4j:region>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="right">
+        <a4j:region rendered="#{advertiserKey ne null}">
+            <h:form>
+                <h:commandLink value="/balance" styleClass="right-bar-button"
+                               action="/control/balance.xhtml?faces-redirect=true"/>
+                <h:commandLink value="/creatives" styleClass="right-bar-button"
+                               action="/control/creatives.xhtml?faces-redirect=true"/>
+                <h:commandLink value="/offers" styleClass="right-bar-button"
+                               action="/control/offers.xhtml?faces-redirect=true"/>
+                <h:commandLink value="/domainLists" styleClass="right-bar-button"
+                               action="/control/domainLists.xhtml?faces-redirect=true"/>
+            </h:form>
+        </a4j:region>
+    </ui:define>
+
+</ui:composition>
+
+</html>

@@ -22,9 +22,4 @@
         <param-value>false</param-value>
     </context-param>
 
-    <error-page>
-        <exception-type>com.sitescout.ui.api.NoAccessException</exception-type>
-        <location>/noAccess.html</location>
-    </error-page>
-
 </web-app>

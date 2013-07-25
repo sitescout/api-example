@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="rightPanel, content, noData"/>
+    <ui:define name="title">Campaigns</ui:define>
+
+    <ui:define name="left">
+        <span class="left-bar-button">/advertisers</span>
+        <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+        <span class="left-bar-button">/campaigns</span>
+        <span class="left-bar-button lft-btn-active">/stats</span>
+    </ui:define>
+
+    <ui:define name="center">
+
+        <h:form>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel
+                        rendered="#{advertiserKey ne null and campaignStats.getDetails(advertiserKey).totalCount ne 0}">
+
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">
+                                <h:outputText value="Impressions Bid vs. Impressions Won"/>
+                            </div>
+                            <p:barChart
+                                    value="#{campaignStatsGraph.getStatsModel(advertiserKey)}"
+                                    legendPosition="ne" style="height:160px"
+                                    stacked="true" extender="ext" animate="true"/>
+                        </div>
+                    </div>
+                    <div id="grid-header">
+                        <div id="campaign-title">Campaigns</div>
+
+                        <div id="pagination">
+                            Page: <b>#{campaignStats.getDetails(advertiserKey).pagination.page}</b>
+
+                            <div id="pagination-controls">
+                                <h:panelGrid columns="4">
+
+                                    Page Size: <h:selectOneMenu value="#{campaignStats.pageSize}"
+                                                                onchange="this.form.submit()"
+                                                                styleClass="page-drop-menu">
+                                    <f:selectItem itemValue="10"/>
+                                    <f:selectItem itemValue="20"/>
+                                    <f:selectItem itemValue="25"/>
+                                    <f:selectItem itemValue="50"/>
+                                    <f:selectItem itemValue="100"/>
+                                </h:selectOneMenu>
+                                    <h:commandLink value="#{campaignsPage.prev()}" action="#{campaignStats.prevPage()}"
+                                                   styleClass="#{(campaignsPage.prev() eq '') ? 'page-button-hide' : 'page-button'}"/>
+                                    <h:commandLink value="#{campaignsPage.next()}" action="#{campaignStats.nextPage()}"
+                                                   styleClass="#{(campaignsPage.next() eq '') ? 'page-button-hide' : 'page-button'}"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+
+                <rich:extendedDataTable id="campaignTable"
+                                        value="#{campaignStats.getDetails(advertiserKey).results}" var="result"
+                                        selection="#{campaignsPage.selectedRows}"
+                                        rowClasses="odd-row, even-row">
+
+                    <a4j:ajax event="selectionchange" execute="@form"
+                              listener="#{campaignsPage.updateSelectedCampaign()}"
+                              render="rightPanel"/>
+
+                        <rich:column sortBy="#{result.entity.campaignId}" width="12.5%">
+                            <f:facet name="header">CampaignID</f:facet>
+                            <h:outputText value="#{result.entity.campaignId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.name}" width="12.5%">
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputText value="#{result.entity.name}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.status}" width="12.5%">
+                            <f:facet name="header">Status</f:facet>
+                            <h:outputText value="#{result.entity.status}"
+                                          styleClass="#{(result.entity.status eq 'online') ? 'green' : 'grey'}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.defaultBid}" width="12.5%">
+                            <f:facet name="header">Default Bid</f:facet>
+                            $<h:outputText value="#{result.entity.defaultBid}"/>
+                        </rich:column>
+
+                    <rich:column sortBy="#{result.stats.impressionsBid}" width="12.5%">
+                        <f:facet name="header">Impressions Bid</f:facet>
+                        <h:outputText value="#{result.stats.impressionsBid eq 0 ? '-' : result.stats.impressionsBid}">
+                            <f:convertNumber pattern="###,###"/>
+                        </h:outputText>
+                        </rich:column>
+
+                    <rich:column sortBy="#{result.stats.impressionsWon}" width="12.5%">
+                        <f:facet name="header">Impressions Won</f:facet>
+                        <h:outputText value="#{result.stats.impressionsWon eq 0 ? '-' : result.stats.impressionsWon}">
+                            <f:convertNumber pattern="###,###"/>
+                        </h:outputText>
+                    </rich:column>
+
+                    <rich:column sortBy="#{result.stats.effectiveCPM}" width="12.5%">
+                        <f:facet name="header">Effective CPM</f:facet>
+                        <h:outputText value="#{result.stats.effectiveCPM eq 0 ? '-' : result.stats.effectiveCPM}">
+                        <f:convertNumber type="currency" currencyCode="USD" minFractionDigits="3"/>
+                    </h:outputText>
+                    </rich:column>
+
+                    <rich:column sortBy="#{result.stats.auctionsSpend}" width="12.5%">
+                        <f:facet name="header">Auctions Spend</f:facet>
+                        <h:outputText value="#{result.stats.auctionsSpend eq 0 ? '-' : result.stats.auctionsSpend}">
+                            <f:convertNumber type="currency" currencyCode="USD" minFractionDigits="3"/>
+                        </h:outputText>
+                    </rich:column>
+
+                </rich:extendedDataTable>
+            </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel
+                        rendered="#{campaignStats.getDetails(advertiserKey).totalCount eq 0 or advertiserKey eq null}">
+
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+
+        </h:form>
+    </ui:define>
+
+    <ui:define name="right">
+        <div id="campaign-details">
+            <h:form>
+                <a4j:outputPanel id="rightPanel">
+                    <a4j:outputPanel rendered="#{campaignsPage.rightPanelLoad()}">
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/campaignHourly.jsf?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="hourly.png" class="right-bar-icon"/>
+                            <h:outputText value="/hourly"/>
+                        </h:commandLink>
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/sites.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="sites.png" class="right-bar-icon"/>
+                            <h:outputText value="/sites"/>
+                        </h:commandLink>
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/creatives.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="creatives.png" class="right-bar-icon"/>
+                            <h:outputText value="/creatives"/>
+                        </h:commandLink>
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/offers.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="offers.png" class="right-bar-icon"/>
+                            <h:outputText value="/offers"/>
+                        </h:commandLink>
+
+                        <ui:include src="campaignMoreStatsTable.xhtml"/>
+                    </a4j:outputPanel>
+                </a4j:outputPanel>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
+</html>

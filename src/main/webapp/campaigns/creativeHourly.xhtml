@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="content, noData"/>
+    <ui:define name="title">Creative Hourly Information</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span><h:commandLink value="/campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/ <h:outputText value="#{campaignKey}"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span> <h:commandLink value="/creatives" action="/campaigns/creatives.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button lft-btn-active">/ <h:outputText value="#{creativeId}"/></span>
+        </h:form>
+
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <div id="nav-container">
+                <div id="nav-wrapper">
+                    <div id="previous-id">
+                        Previous:
+                        <h:commandLink value="#{creativesPage.findPrev(creativeId)}"
+                                       action="#{creativesPage.setCreativeId(creativesPage.findPrev(creativeId))}"/>
+                    </div>
+                    <div id="current-id">
+                        Current Creative Id: <b><h:outputText value="#{creativeId}"/></b>
+                    </div>
+                    <div id="next-id">
+                        Next: <h:commandLink value="#{creativesPage.findNext(creativeId)}"
+                                             action="#{creativesPage.setCreativeId(creativesPage.findNext(creativeId))}"/>
+                    </div>
+                </div>
+            </div>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel
+                        rendered="#{!creativesPage.getSelectedCreative(advertiserKey, campaignKey, creativeId).statsList.isEmpty()}}">
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">Impressions Bid vs. Impressions Won</div>
+                            <rich:panel id="barChartCreatives">
+                                <p:barChart
+                                        value="#{campaignHourlyGraph.getCreativeModel(advertiserKey, campaignKey, creativeId)}"
+                                        legendPosition="ne"
+                                        title="Creatives Hourly" style="height:160px" stacked="true" extender="ext"
+                                        animate="true"/>
+                            </rich:panel>
+                        </div>
+                    </div>
+
+                    <div id="grid-header">
+                        <div id="campaign-title">Creatives Hourly</div>
+                    </div>
+                    <rich:extendedDataTable id="creativeHourlyTable"
+                                            value="#{creativesPage.getSelectedCreative(advertiserKey, campaignKey, creativeId).statsList}"
+                                            var="creativeHourStats" rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{creativeHourStats.hour}">
+                            <f:facet name="header">Hour</f:facet>
+                            <h:outputText value="#{creativeHourStats.hour}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.clicks}">
+                            <f:facet name="header">Clicks</f:facet>
+                            <h:outputText value="#{creativeHourStats.stats.clicks}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.costPerClick}">
+                            <f:facet name="header">Cost Per Click</f:facet>
+                            $<h:outputText value="#{creativeHourStats.stats.costPerClick}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.profitPerClick}">
+                            <f:facet name="header">Profit Per Click</f:facet>
+                            $<h:outputText value="#{creativeHourStats.stats.profitPerClick}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.impressionsBid}">
+                            <f:facet name="header">Impressions Bid</f:facet>
+                            <h:outputText value="#{creativeHourStats.stats.impressionsBid}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.impressionsWon}">
+                            <f:facet name="header">Impressions Won</f:facet>
+                            <h:outputText value="#{creativeHourStats.stats.impressionsWon}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.auctionsSpend}">
+                            <f:facet name="header">Auctions Spend</f:facet>
+                            $<h:outputText value="#{creativeHourStats.stats.auctionsSpend}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.conversions}">
+                            <f:facet name="header">Conversions</f:facet>
+                            <h:outputText value="#{creativeHourStats.stats.conversions}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.conversionRate}">
+                            <f:facet name="header">Conversion Rate</f:facet>
+                            <h:outputText value="#{creativeHourStats.stats.conversionRate}">
+                                <f:convertNumber pattern="#0.000"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.revenuePerMille}">
+                            <f:facet name="header">Revenue Per Mille</f:facet>
+                            $<h:outputText value="#{creativeHourStats.stats.revenuePerMille}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{creativeHourStats.stats.revenue}">
+                            <f:facet name="header">Revenue</f:facet>
+                            $<h:outputText value="#{creativeHourStats.stats.revenue}"/>
+                        </rich:column>
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel
+                        rendered="#{creativesPage.getSelectedCreative(advertiserKey, campaignKey, creativeId).statsList.isEmpty()}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+</html>

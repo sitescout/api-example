@@ -6,8 +6,8 @@ import com.sitescout.dsp.api.model.dto.stats.HourlyEntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
 import com.sitescout.ui.AdvertiserKeyProducer;
-import com.sitescout.ui.data.CreativeHourly;
-import com.sitescout.ui.data.CreativeStats;
+import com.sitescout.ui.data.campaigns.CreativeHourly;
+import com.sitescout.ui.data.campaigns.CreativeStats;
 import com.sitescout.ui.qualifiers.CreativeId;
 import com.sitescout.ui.qualifiers.Key;
 
@@ -37,6 +37,26 @@ public class CreativesPage implements Serializable {
     Integer creativeId = 0;
     Collection<Object> selectedRows;
 
+    public String next() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (creativeStats.getDetails(advertiserKeyProducer.getAdvertiserKey(), campaignsPage.getCampaignKey())
+                    .getLink("next") != null) {
+                return "Next Page";
+            }
+        }
+        return "";
+    }
+
+    public String prev() {
+        if (advertiserKeyProducer.getAdvertiserKey() != null) {
+            if (creativeStats.getDetails(advertiserKeyProducer.getAdvertiserKey(), campaignsPage.getCampaignKey())
+                    .getLink("prev") != null) {
+                return "Previous Page";
+            }
+        }
+        return "";
+    }
+
     public void campaignKeyObserver(@Observes CampaignsPage.CampaignKeyChangeEvent event) {
         setNull();
     }
@@ -56,7 +76,10 @@ public class CreativesPage implements Serializable {
 
     public void setCreativeId(Integer creativeId) {
         this.creativeId = creativeId;
-        updateSelectedRow();
+        if (creativeId != null) {
+            updateSelectedRow();
+        }
+
     }
 
     public Collection<Object> getSelectedRows() {
@@ -65,6 +88,13 @@ public class CreativesPage implements Serializable {
 
     public void setSelectedRows(Collection<Object> selectedRows) {
         this.selectedRows = selectedRows;
+    }
+
+    public boolean rightPanelLoad() {
+        if (selectedRows == null) {
+            return false;
+        }
+        return !selectedRows.isEmpty();
     }
 
     public Integer findNext(int creativeId) {

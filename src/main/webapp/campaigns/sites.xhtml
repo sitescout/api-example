@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="rightPanel, content, noData"/>
+    <ui:define name="title">Campaign Site</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span> <h:commandLink value="/campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/<h:outputText value="#{campaignKey}"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span class="left-bar-button lft-btn-active">/sites</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="campaignNavigation.xhtml"/>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel rendered="#{siteStats.getDetails(advertiserKey, campaignKey).totalCount ne 0}">
+
+
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">Impressions Bid vs. Impressions Won</div>
+                            <rich:panel id="barChartSites">
+                                <p:barChart
+                                        value="#{campaignDetailsSiteGraph.getStatsModel(advertiserKey, campaignKey)}"
+                                        legendPosition="ne" style="height:160px"
+                                        stacked="true" animate="true" extender="ext"/>
+                            </rich:panel>
+                        </div>
+                    </div>
+
+                    <div id="grid-header">
+                        <div id="campaign-title">Sites</div>
+                        <div id="pagination">
+                            Page: <b>#{siteStats.getDetails(advertiserKey, campaignKey).pagination.page}</b>
+
+                            <div id="pagination-controls">
+                                <h:panelGrid columns="4">
+
+                                    Page Size: <h:selectOneMenu value="#{siteStats.pageSize}"
+                                                                onchange="this.form.submit()"
+                                                                styleClass="page-drop-menu">
+                                    <f:selectItem itemValue="10"/>
+                                    <f:selectItem itemValue="20"/>
+                                    <f:selectItem itemValue="25"/>
+                                    <f:selectItem itemValue="50"/>
+                                    <f:selectItem itemValue="100"/>
+                                </h:selectOneMenu>
+                                    <h:commandLink value="#{sitesPage.prev()}" action="#{siteStats.prevPage()}"
+                                                   styleClass="#{(sitesPage.prev() eq '') ? 'page-button-hide' : 'page-button'}"/>
+                                    <h:commandLink value="#{sitesPage.next()}" action="#{siteStats.nextPage()}"
+                                                   styleClass="#{(sitesPage.next() eq '') ? 'page-button-hide' : 'page-button'}"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+                    <rich:extendedDataTable id="sitesTable"
+                                            value="#{siteStats.getDetails(advertiserKey, campaignKey).results}"
+                                            var="sites"
+                                            selection="#{sitesPage.selectedRows}"
+                                            rowClasses="odd-row, even-row">
+
+                        <a4j:ajax event="selectionchange" execute="@form"
+                                  listener="#{sitesPage.updateSelectedSite()}"
+                                  render="rightPanel"/>
+
+                        <rich:column sortBy="#{sites.entity.ruleId}">
+                            <f:facet name="header">Site Rule ID</f:facet>
+                            <h:outputText value="#{sites.entity.ruleId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.entity.siteRef}">
+                            <f:facet name="header">Site Reference</f:facet>
+                            <h:outputText value="#{sites.entity.siteRef}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.entity.reviewStatus}">
+                            <f:facet name="header">Review Status</f:facet>
+                            <h:outputText value="#{sites.entity.reviewStatus}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.entity.domain}">
+                            <f:facet name="header">Domain</f:facet>
+                            <h:outputText value="#{sites.entity.domain}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.entity.bid}">
+                            <f:facet name="header">Bid</f:facet>
+                            $<h:outputText value="#{sites.entity.bid}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.stats.impressionsBid}">
+                            <f:facet name="header">Impressions Bid</f:facet>
+                            <h:outputText value="#{sites.stats.impressionsBid}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.stats.impressionsWon}">
+                            <f:facet name="header">Impressions Won</f:facet>
+                            <h:outputText value="#{sites.stats.impressionsWon}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{sites.stats.clicks}">
+                            <f:facet name="header">Clicks</f:facet>
+                            <h:outputText value="#{sites.stats.clicks}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel rendered="#{siteStats.getDetails(advertiserKey, campaignKey).totalCount eq 0}">
+
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+    </ui:define>
+
+    <ui:define name="right">
+        <div id="campaign-details">
+            <h:form>
+                <a4j:outputPanel id="rightPanel">
+                    <a4j:outputPanel rendered="#{sitesPage.rightPanelLoad()}">
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/siteHourly.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="hourly.png" class="right-bar-icon"/>
+                            <h:outputText value="/hourly"/>
+                        </h:commandLink>
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/sitePlacements.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="placements.png" class="right-bar-icon"/>
+                            <h:outputText value="/placements"/>
+                        </h:commandLink>
+
+                        <h:commandLink styleClass="right-bar-button"
+                                       action="/campaigns/siteCreatives.xhtml?faces-redirect=true">
+                            <h:graphicImage library="default/img/icons" name="creatives.png" class="right-bar-icon"/>
+                            <h:outputText value="/creatives"/>
+                        </h:commandLink>
+
+                        <ui:include src="siteMoreStatsTable.xhtml"/>
+                    </a4j:outputPanel>
+                </a4j:outputPanel>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
+</html>

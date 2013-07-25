@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="exchangeTable"/>
+    <ui:define name="title">Exchanges</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+            <span class="left-bar-button lft-btn-active">/Exchanges</span>
+        </h:form>
+
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <div id="grid-header">
+                <div id="campaign-title">Exchanges</div>
+            </div>
+            <rich:extendedDataTable id="exchangeTable"
+                                    value="#{exchanges.getDetails()}" var="result"
+                                    rowClasses="odd-row, even-row">
+
+                <rich:column sortBy="#{result.exchangeId}">
+                    <f:facet name="header">Exchange ID</f:facet>
+                    <h:outputText value="#{result.exchangeId}"/>
+                </rich:column>
+
+                <rich:column sortBy="#{result.name}" width="200px">
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{result.name}"/>
+                </rich:column>
+
+            </rich:extendedDataTable>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
+</html>

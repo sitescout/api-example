@@ -8,10 +8,19 @@
         <from-view-id>/login.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>success</from-outcome>
-            <to-view-id>/campaigns.xhtml</to-view-id>
+            <to-view-id>/index.xhtml</to-view-id>
             <redirect include-view-params="true"/>
         </navigation-case>
     </navigation-rule>
+
+<navigation-rule>
+    <from-view-id>/login_invalid.xhtml</from-view-id>
+    <navigation-case>
+        <from-outcome>success</from-outcome>
+        <to-view-id>/index.xhtml</to-view-id>
+        <redirect include-view-params="true"/>
+    </navigation-case>
+</navigation-rule>
     <lifecycle>
         <phase-listener id="nocache">com.sitescout.ui.data.CacheControlPhaseListener</phase-listener>
     </lifecycle>

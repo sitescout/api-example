@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="content, noData"/>
+    <ui:define name="title">Creatives</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/advertiser" action="/control/advertisers.xhtml?faces-redirect=true"/>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span class="left-bar-button lft-btn-active">/creatives</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel rendered="#{creatives.getDetails(advertiserKey).totalCount ne 0}">
+                    <div id="grid-header">
+                        <div id="campaign-title">Creatives</div>
+                    </div>
+                    <rich:extendedDataTable id="creativesTable"
+                                            value="#{creatives.getDetails(advertiserKey).results}" var="result"
+                                            rowClasses="odd-row, even-row">
+
+
+                        <rich:column sortBy="#{result.creativeId}">
+                            <f:facet name="header">Creative Id</f:facet>
+                            <h:outputText value="#{result.creativeId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.label}" width="200px">
+                            <f:facet name="header">Label</f:facet>
+                            <h:outputText value="#{result.label}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.format}" width="200px">
+                            <f:facet name="header">Format</f:facet>
+                            <h:outputText value="#{result.format}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.previewUrl}" width="200px">
+                            <f:facet name="header">Preview URL</f:facet>
+                            <h:outputText value="#{result.previewUrl}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.reviewStatus}" width="200px">
+                            <f:facet name="header">Review Status</f:facet>
+                            <h:outputText value="#{result.reviewStatus}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel rendered="#{creatives.getDetails(advertiserKey).totalCount eq 0}">
+                    <ui:include src="../noData.xhtml"/>x
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+
+    </ui:define>
+
+    <ui:define name="right">
+        <h:form>
+            <h:commandLink value="/assets" styleClass="right-bar-button"
+                           action="/control/creativeAssets.xhtml?faces-redirect=true"/>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
+</html>

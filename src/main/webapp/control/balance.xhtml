@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:define name="title">Advertisers</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/advertisers" action="/control/advertisers.xhtml?faces-redirect=true"/>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/> </span>
+            <span class="left-bar-button lft-btn-active">/balance</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <div id="nav-container">
+                <div id="nav-wrapper">
+                    <h:outputText value="Your balance is: $"/>
+                    <h:outputText value="#{balance.getDetails(advertiserKey)}"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+</html>

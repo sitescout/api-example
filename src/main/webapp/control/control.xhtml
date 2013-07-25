@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:define name="title">Introduction</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button lft-btn-active">/</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <div class="center-frame">
+            <h:graphicImage value="http://www.sitescout.com/wp-content/uploads/2013/06/control.jpg"
+                    style="margin-left: auto; margin-right: auto; display: block;"/>
+            </div>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="right">
+        <h:form>
+            <h:commandLink value="/exchanges" styleClass="right-bar-button"
+                           action="/control/exchanges.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/sites" styleClass="right-bar-button"
+                           action="/control/sites.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/advertisers" styleClass="right-bar-button"
+                           action="/control/advertisers.xhtml?faces-redirect=true"/>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
+
+</html>

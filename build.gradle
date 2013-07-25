@@ -58,6 +58,8 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.2.5'
     compile 'commons-lang:commons-lang:2.6'
 
+    compile 'br.com.digilabs.jqplot:jqplot4java:1.2.2'
+
     String deltaspikeVersion = '0.4'
     compile 'org.apache.deltaspike.modules:deltaspike-jsf-module-api:' + deltaspikeVersion
     runtime 'org.apache.deltaspike.modules:deltaspike-jsf-module-impl:' + deltaspikeVersion

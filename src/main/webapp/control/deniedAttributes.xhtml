@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:define name="title">Audiences</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/sites" action="/control/sites.xhtml?faces-redirect=true"/>
+            <span class="left-bar-button-active">/{ <h:outputText value="#{deniedAttributes.siteRef}"/> }</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <div id="grid-header">
+                <div id="campaign-title">SiteRef Denied Attributes</div>
+
+            </div>
+            <rich:extendedDataTable id="deniedAttributesTable"
+                                    value="#{deniedAttributes.getDetails(deniedAttributes.siteRef)}" var="result">
+
+                <rich:column sortBy="#{result.verticals}">
+                    <f:facet name="header">Verticals</f:facet>
+                    <h:outputText value="#{result.verticals}"/>
+                </rich:column>
+
+                <rich:column sortBy="#{result.creativeTypes}">
+                    <f:facet name="header">Creative Types</f:facet>
+                    <h:outputText value="#{result.creativeTypes}"/>
+                </rich:column>
+
+            </rich:extendedDataTable>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
+</html>

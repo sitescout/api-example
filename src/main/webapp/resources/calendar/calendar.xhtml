@@ -13,25 +13,34 @@
 </composite:interface>
 
 <composite:implementation>
+    <h:form>
     <h:panelGrid id="panel" columns="4">
 
-        <h:outputText value="Date From:"/>
-        <a4j:outputPanel layout="block">
-            <rich:calendar value="#{calendarBean.dateFrom}" datePattern="MMM d, yyyy" firstWeekDay="1"
-                    showWeeksBar="false">
-                <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}"/>
+        <h:graphicImage library="default/img" name="date_range.png" style="margin-top:2px;margin-right:3px;"/>
+        <h:outputText value="Date Range:"/>
+        <a4j:outputPanel layout="block" id="dateFrom">
+            <rich:calendar value="#{calendarBean.dateFrom}" datePattern="MMM d, yyyy" firstWeekDay="7"
+                    showWeeksBar="false" todayControlMode="hidden">
+                <rich:placeholder value="Select a date..."/>
+                <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}, dateTo, dateFrom"/>
             </rich:calendar>
         </a4j:outputPanel>
 
-        <h:outputText value="Date To:"/>
 
-        <a4j:outputPanel layout="block">
-            <rich:calendar value="#{calendarBean.dateTo}" datePattern="MMM d, yyyy" firstWeekDay="1"
+
+        <a4j:outputPanel id="dateTo" layout="block">
+            <a4j:region rendered="#{calendarBean.dateFrom ne null}">
+            <h:outputText value="-" style="margin-left:-4px;"/>
+            <rich:calendar value="#{calendarBean.dateTo}" datePattern="MMM d, yyyy" firstWeekDay="7"
                     showWeeksBar="false">
-                <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}"/>
+                <rich:placeholder value="Select a date..."/>
+                <a4j:ajax event="change" execute="@this" render="#{cc.attrs.renderValue}, dateTo"/>
             </rich:calendar>
+            </a4j:region>
         </a4j:outputPanel>
 
     </h:panelGrid>
+
+    </h:form>
 </composite:implementation>
 </html>

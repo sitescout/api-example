@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="noData, content"/>
+    <ui:define name="title">Audiences</ui:define>
+
+    <ui:define name="left">
+        <span class="left-bar-button">/advertisers</span>
+        <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+        <span class="left-bar-button">/audiences</span>
+        <span class="left-bar-button lft-btn-active">/stats</span>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel
+                        rendered="#{advertiserKey ne null and audienceStats.getDetails(advertiserKey).totalCount ne 0}">
+                    <div id="grid-header">
+                        <div id="campaign-title">Audiences</div>
+
+                        <div id="pagination">
+                            Page: <b>#{audienceStats.getDetails(advertiserKey).pagination.page}</b>
+                            Page Size: <b>#{audienceStats.getDetails(advertiserKey).pagination.pageSize}</b>
+                        </div>
+                    </div>
+
+                    <rich:extendedDataTable id="audienceTable"
+                                            value="#{audienceStats.getDetails(advertiserKey).results}" var="result"
+                                            rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{result.entity.audienceId}">
+                            <f:facet name="header">Audience ID</f:facet>
+                            <h:outputText value="#{result.entity.audienceId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.entity.name}" width="200px">
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputText value="#{result.entity.name}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.stats.newVisitors}">
+                            <f:facet name="header">New Visitors</f:facet>
+                            <h:outputText value="#{result.stats.newVisitors}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.stats.totalVisitors}">
+                            <f:facet name="header">Total Visitors</f:facet>
+                            <h:outputText value="#{result.stats.totalVisitors}"/>
+                        </rich:column>
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel
+                        rendered="#{audienceStats.getDetails(advertiserKey).totalCount eq 0 or advertiserKey eq null}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+</html>

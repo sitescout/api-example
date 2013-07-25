@@ -4,8 +4,8 @@ import com.sitescout.dsp.api.model.dto.campaign.SiteRuleDTO;
 import com.sitescout.dsp.api.model.dto.stats.EntityStatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsDTO;
 import com.sitescout.dsp.api.model.dto.stats.StatsListDTO;
-import com.sitescout.ui.data.SitePlacements;
-import com.sitescout.ui.data.SiteStats;
+import com.sitescout.ui.data.campaigns.SitePlacements;
+import com.sitescout.ui.data.campaigns.SiteStats;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 
@@ -32,14 +32,14 @@ public class CampaignDetailsSiteGraph {
 
         for (EntityStatsDTO<SiteRuleDTO> entities : campaignStatData.getResults()) {
             StatsDTO stats = entities.getStats();
-            bids.set(entities.getEntity().getDomain(), stats.getImpressionsBid() - stats.getImpressionsWon());
+            bids.set(entities.getEntity().getSiteRef(), stats.getImpressionsBid() - stats.getImpressionsWon());
         }
 
         ChartSeries wins = new ChartSeries();
         wins.setLabel("Wins");
         for (EntityStatsDTO<SiteRuleDTO> entities : campaignStatData.getResults()) {
             StatsDTO stats = entities.getStats();
-            wins.set(entities.getEntity().getDomain(), stats.getImpressionsWon());
+            wins.set(entities.getEntity().getSiteRef(), stats.getImpressionsWon());
         }
         statModel.addSeries(wins);
         statModel.addSeries(bids);

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="noData, content"/>
+    <ui:define name="title">Offers</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <h:commandLink value="/" action="/control/control.xhtml?faces-redirect=true"/>
+            <h:commandLink value="/advertisers" action="/control/advertisers.xhtml?faces-redirect=true"/>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span class="left-bar-button lft-btn-active">/offers</span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel rendered="#{offers.getDetails(advertiserKey).totalCount ne 0}">
+                    <div id="grid-header">
+                        <div id="campaign-title">Offers</div>
+                    </div>
+                    <rich:extendedDataTable id="offersTable"
+                                            value="#{offers.getDetails(advertiserKey).results}" var="result"
+                                            rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{result.offerId}">
+                            <f:facet name="header">Offer ID</f:facet>
+                            <h:outputText value="#{result.offerId}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{result.name}" width="200px">
+                            <f:facet name="header">Name</f:facet>
+                            <h:outputText value="#{result.name}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel rendered="#{offers.getDetails(advertiserKey).totalCount eq 0}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>
+</html>

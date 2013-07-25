@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:composition template="/templates/divisionTemplate.xhtml">
+    <ui:param name="renderValue" value="noData, content"/>
+    <ui:define name="title">Site Hourly Information</ui:define>
+
+    <ui:define name="left">
+        <h:form>
+            <span class="left-bar-button">/advertisers</span>
+            <span class="left-bar-button">/<h:outputText value="#{advertiserKey}"/></span>
+            <span><h:commandLink value="/campaigns" action="/campaigns/campaigns.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button">/stats</span>
+            <span><h:commandLink value="/sites" action="/campaigns/sites.xhtml?faces-redirect=true"/></span>
+            <span class="left-bar-button lft-btn-active">/ <h:outputText value="#{siteRef}"/></span>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="center">
+        <h:form>
+            <ui:include src="siteNavigation.xhtml"/>
+            <a4j:outputPanel id="content">
+                <a4j:outputPanel
+                        rendered="#{!siteHourly.getDetails(siteRef, advertiserKey, campaignKey).statsList.isEmpty()}">
+                    <div class="center-frame">
+                        <div id="graph-size">
+                            <div class="graph-title">Impressions Bid vs. Impressions Won</div>
+                            <rich:panel id="barChartSitesHourly">
+                                <p:barChart
+                                        value="#{campaignHourlyGraph.getCategoryModel(siteRef, advertiserKey, campaignKey)}"
+                                        legendPosition="ne"
+                                        style="height:160px" stacked="true" extender="ext"
+                                        animate="true"/>
+                            </rich:panel>
+                        </div>
+                    </div>
+
+                    <div id="grid-header">
+                        <div id="campaign-title">Sites Hourly</div>
+                    </div>
+
+                    <rich:extendedDataTable id="siteHourlyTable"
+                                            value="#{sitesPage.getSelectedSite(siteRef, advertiserKey, campaignKey).statsList}"
+                                            var="siteHourStats"
+                                            rowClasses="odd-row, even-row">
+
+                        <rich:column sortBy="#{siteHourStats.hour}">
+                            <f:facet name="header">Hour</f:facet>
+                            <h:outputText value="#{siteHourStats.hour}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.clicks}">
+                            <f:facet name="header">Clicks</f:facet>
+                            <h:outputText value="#{siteHourStats.stats.clicks}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.costPerClick}">
+                            <f:facet name="header">Cost Per Click</f:facet>
+                            $<h:outputText value="#{siteHourStats.stats.costPerClick}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.profitPerClick}">
+                            <f:facet name="header">Profit Per Click</f:facet>
+                            $<h:outputText value="#{siteHourStats.stats.profitPerClick}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.impressionsBid}">
+                            <f:facet name="header">Impressions Bid</f:facet>
+                            <h:outputText value="#{siteHourStats.stats.impressionsBid}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.impressionsWon}">
+                            <f:facet name="header">Impressions Won</f:facet>
+                            <h:outputText value="#{siteHourStats.stats.impressionsWon}">
+                                <f:convertNumber pattern="###,###"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.auctionsSpend}">
+                            <f:facet name="header">Auctions Spend</f:facet>
+                            $<h:outputText value="#{siteHourStats.stats.auctionsSpend}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.conversions}">
+                            <f:facet name="header">Conversions</f:facet>
+                            <h:outputText value="#{siteHourStats.stats.conversions}"/>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.conversionRate}">
+                            <f:facet name="header">Conversion Rate</f:facet>
+                            <h:outputText value="#{siteHourStats.stats.conversionRate}">
+                                <f:convertNumber pattern="#0.000"/>
+                            </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.revenuePerMille}">
+                            <f:facet name="header">Revenue Per Mille</f:facet>
+                            $<h:outputText value="#{siteHourStats.stats.revenuePerMille}">
+                            <f:convertNumber pattern="#0.000"/>
+                        </h:outputText>
+                        </rich:column>
+
+                        <rich:column sortBy="#{siteHourStats.stats.revenue}">
+                            <f:facet name="header">Revenue</f:facet>
+                            $<h:outputText value="#{siteHourStats.stats.revenue}"/>
+                        </rich:column>
+
+                    </rich:extendedDataTable>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+        </h:form>
+
+        <h:form>
+            <a4j:outputPanel id="noData">
+                <a4j:outputPanel
+                        rendered="#{siteHourly.getDetails(siteRef, advertiserKey, campaignKey).statsList.isEmpty()}">
+                    <ui:include src="../noData.xhtml"/>
+                </a4j:outputPanel>
+            </a4j:outputPanel>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+</html>
